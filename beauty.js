@@ -113,30 +113,23 @@ for(var key in timefix) {
     timefix[key].innerHTML = dateObj.toLocaleDateString() + ' ' + dateObj.toLocaleTimeString("zh-CN", "Asia/Berjing") + '<br />';
 //    alert(dateObj.getDate());
     
-
-    
-    
-    
-    
-    
   }
 }
 
+/* better Quote display */
+var iframeQuote = document.getElementsByTagName("font");
 
+for(var i = 0; i < iframeQuote.length; i++) {
+  var colorQuote = iframeQuote[i].color;
+  
+  if(colorQuote.search('789922') !== -1) {
+    divThreads[i].classList.add('threadfly');
+    alert(iframeQuote[i].innerHTML);
+    var numPost = iframeQuote[i].innerHTML;
+    var numPost = numPost.substr(5);
+    alert(numPost);
+//    iframeQuote.style.font-size 
+    iframeQuote.innerHTML = '<iframe src="http://h.acfun.tv/t/' + numPost + '"></iframe>';
+  }
+}  
 
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-Exception: unterminated string literal
-@Scratchpad/8:112
-*/
