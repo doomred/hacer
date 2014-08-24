@@ -231,18 +231,21 @@ function styletheframes(targetObj) {
 /* insert css into iframe */
 var frameList = targetObj.frames;
 //  alert(frameList.length);
-frameList[frameList.length - 1].onload = window.setTimeout(diveintoframes, 3000);
+frameList[frameList.length - 1].onload = window.setTimeout(diveintoframes, 100);
 
 function diveintoframes() {  /* dirty hack, may cause problem */
 
-for(var i = 0; i < frameList.length - 1; i++){
+for(var i = 0; i < frameList.length; ++i){ /* It's Magic, IDK why it's .length not .length -1 */
   var contentTd = frameList[i].document.getElementsByTagName('td');
   //  alert(contentTd[0].innerHTML);
   contentTd[0].innerHTML = '';
-  
-  betterquote(frameList[i]);
-  styletheframes(frameList[i]);
 
+  betterquote(frameList[i]);
+  if(frameList[i].frames.length)  styletheframes(frameList[i]);
+  
+  
+  
+  
 /* Post about iframe content height, failed 
   frameList[i].document.body.onload = function(){
     top.postMessage(document.body.scrollHeight, '*');
@@ -274,3 +277,8 @@ for(var i = 0; i < frameList.length - 1; i++){
 }
 }
 styletheframes(window);
+
+/*
+Exception: prompt aborted by user
+@426
+*/
