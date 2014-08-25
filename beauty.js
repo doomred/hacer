@@ -234,8 +234,11 @@ for(var i = 0; i < aTag.length; i++) {
 
 /* add links to the toolbar-bottom */
 var divToolbar = document.getElementsByClassName('toolbar-bottom')[0];
-divToolbar.innerHTML += '<a id="cssswitcher" href="javascript:cssSwitchHander()">CSS off</a>'; /* initialize */
+divToolbar.innerHTML += '<a id="cssswitcher" href="javascript:cssSwitchHandler()">CSS off</a>'; /* initialize */
+divToolbar.innerHTML += '<a id=dangerswitcher" href="javascript:dangerSwitchHandler()"<pre>/!\DANGER/!\</pre></a>;  /* danger area initialize */
 var currentStyle = 'day';
+var currentDangerious = 0;
+var currentAdmin = 0;
 
 /* add css switcher */
 var currentCSS = document.createElement('style');
@@ -244,8 +247,30 @@ currentCSS.type = 'text/css';
 currentCSS.innerHTML = dayCSS; /* initialize */
 htmlHead[0].appendChild(currentCSS);
 
+/* add danger switcher */
+var currentDanger = document.createElement('span');
+currentDanger.id = 'danger';
+currentDanger.style.padding = '0 1em';
+currentDanger.style.display = 'none';
+currentDanger.innerHTML += '<a href="javascript:adminSwitchHandler()">ADMIN</a>';
+currentDanger.innerHTML += '<a href="javascript:cssChangeHandler()">Change_CSS</a>';
+htmlHead[0].appendChild(currentDanger);
+
+
+/* danger switch handler */
+function cssSwitchHandler() {
+  if(currentDangerious) {
+    currentDanger.style.display = 'none';
+    
+    currentDangerious = 0;
+  } else {
+    currentDanger.style.display = 'inline';
+    
+    currentDangerious = 1;
+  }
+
 /* css switch handler */
-function cssSwitchHander() {
+function cssSwitchHandler() {
   if(currentStyle == 'day') {
     currentCSS.innerHTML = nightCSS;
     document.getElementById('cssswitcher').innerHTML = "CSS on";
@@ -256,6 +281,32 @@ function cssSwitchHander() {
     document.getElementById('cssswitcher').innerHTML = "CSS off";
     
     currentStyle = 'day';
+  }
+
+function cssChangeHandler() {
+  nightCSS = prompt("Replace the nightCSS");
+    currentStyle = 'day';
+  if(currentStyle == 'day') {
+    currentCSS.innerHTML = nightCSS;
+    document.getElementById('cssswitcher').innerHTML = "CSS on";
+    
+    currentStyle = 'night';
+  } else {
+    currentCSS.innerHTML = dayCSS;
+    currentCSS.innerHTML = nightCSS;
+  }
+
+function adminSwitchHandler() {
+  if(currentAdmin) {
+    /* adminTools display none */
+    document.getElementById('danger').innerHTML = "Admin off";
+
+    currentStyle = 0;
+  } else {
+    /* adminTools display inline */
+    document.getElementById('danger').innerHTML = "Admin on";
+    
+    currentAdmin = 1;
   }
  
 }
