@@ -1,0 +1,5 @@
+I use hcssmin(haskell)
+
+Compile: ghc -o hcssmin hcssmin.hs
+More Info: https://github.com/rayshon/hcssmin
+Recommend is welcome via new Issue.

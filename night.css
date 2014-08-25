@@ -1,25 +1,24 @@
 /* AGENT_SHEET */
-@-moz-document domain("h.acfun.tv") {
 body{
   background-color:black;
-  background-image:url('http://avdot.net/cover.php'); 
+  background-image:url("http://avdot.net/cover.php");
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-repeat: no-repeat;
   color:rgb(198,198,198) !important;
   transition:background .5s ease-in-out;
+  margin:-16px !important; /* dirty hack */
 }
 
 #right_content{
-  margin-left:0px !important;
-  margin-top:-16px !important; /* dirty hack */
   //  background:black !important;
-  background-image: linear-gradient(rgba(0,0,0,0.8),rgba(0,0,0,0.5), rgba(0,0,0,0.9)) !important; /* It's Magic! */
+  background-image: linear-gradient(rgba(0,0,0,0.8),rgba(0,0,0,0.5), rgba(0,0,0,0.9)) !important; /* It is Magic! */
   background-attachment: fixed;
   transition:background .5s ease-in-out;
 }
 td{
+  z-index: -50; /* make under the img tags */
   background:rgba(50,50,60,0.7) !important;
   border: solid 0px;
   border-radius: 1em;
@@ -49,30 +48,18 @@ a:hover{
 
 
 #right_content img{
-  z-index:0;
-  opacity:0.4;
+  z-index: 50;
+  opacity:0.6;
   transition:all .3s ease-in-out;
 }
 #right_content img:hover{
-  opacity:0.9;
+  opacity:0.95;
 }
 
 
 #menu{
-  z-index:2;
   background:rgb(12,12,30) !important;
-  
-  overflow-y:scroll !important;
-  transition:background .5s ease-in;
-  -webkit-transition:background .5s ease-in;
-  -moz-transition:background .5s ease-in;
-  opacity:0;
-  font-size:14px !important;
-  
-}
-#menu:hover{
-  overflow:auto !important;
-  zbackground:rgb(12,12,70) !important;
+  // font-size:14px !important;
 }
 
 .toolbar-bottom {
@@ -94,7 +81,3 @@ font[color="#707070"]{ /* the post number text */
 }
 
 
-#right_content{
-  padding-left:60px !important;
-}
-}
