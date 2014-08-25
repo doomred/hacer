@@ -27,7 +27,7 @@ td{
 }
 td:hover, .originpost  {
   background:rgb(50,50,60) !important;
-  padding:9px !important;
+//  padding: 6em !important;
 }
 td:active {
   background:rgb(50,50,100) !important;
