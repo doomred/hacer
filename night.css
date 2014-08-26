@@ -49,11 +49,11 @@ a:hover{
 
 #right_content img{
   z-index: 50;
-  opacity:0.6;
+  opacity:0.3;
   transition:all .3s ease-in-out;
 }
 #right_content img:hover{
-  opacity:0.95;
+  opacity:0.9;
 }
 
 
