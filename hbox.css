@@ -1,0 +1,14 @@
+#thebox 
+{
+    vertical-align : middle;
+    position : absolute;
+    border: 1px solid #999;
+    background : #FFFFFF; 
+    filter: Alpha(Opacity=100);
+    visibility : hidden;
+    height : 200px;
+    width : 200px;
+    z-index : 120;  /* above the nav-bottom */
+    overflow : hidden;
+    text-align : center;
+}
