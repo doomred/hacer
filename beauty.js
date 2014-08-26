@@ -65,12 +65,19 @@ right_content.style.margin = '0px';
 
 
 /* enable the hidden admin Tools, horrible */
-/*
-var adminTool = document.getElementsByClassName("adminTool");
-for(var key in adminTool) {
-  if(adminTool.hasOwnProperty(key))  adminTool[key].style.display = 'inline';
+fucntion switchadmin(keycode) {
+  var adminTool = document.getElementsByClassName("adminTool");
+  for(var key in adminTool) {
+    if(adminTool.hasOwnProperty(key)) {
+      if(keycode) {
+        adminTool[key].style.display = 'inline';
+      } else {
+        adminTool[key].style.display = 'none';
+      }
+    }
+  }
 }
- */
+
 
 
 /* 
@@ -137,16 +144,6 @@ if(document.getElementsByClassName('threadfly').length == 1)  {
   owCSS.innerHTML += '.threadfly {width: 80%; margin: 2em 10%; } .threadpost {padding: 0 10em;}';
 }
 
-
-
-      
-      
-      
-      
-
-      
-
-
   /* for 2up sytle, add left border and related */
 var divThreads = document.getElementsByClassName("threadfly"); /* reuse the var for the same blocks */
 var k = -1;
@@ -160,8 +157,6 @@ for(var i = 0; i < divThreads.length; i++, k *= -1) {
 
 }
 
-
-
 /* add class originpost and originpost-pic*/
 var divThread = document.getElementsByClassName('threadfly');
 for(var key in divThread) {
@@ -173,13 +168,6 @@ for(var key in divThread) {
     blockOPPic.classList.add('originpost-pic');
   }
 }
-
-
-
-
-
-
-
 
 /* use good time format */
 var timefix = document.getElementsByClassName("posttime") 
@@ -202,7 +190,7 @@ for(var key in timefix) {
     
   }
 }
-//      alert('stop');
+
 /* order the page navigation */
 var tableNavigation = document.getElementsByTagName('table');
 var key = tableNavigation.length - 1;
@@ -235,53 +223,53 @@ for(var i = 0; i < aTag.length; i++) {
 /* add links to the toolbar-bottom */
 var divToolbar = document.getElementsByClassName('toolbar-bottom')[0];
 divToolbar.innerHTML += '<a id="cssswitcher" href="javascript:cssSwitchHandler()">CSS off</a>'; /* initialize */
-divToolbar.innerHTML += '<a id=dangerswitcher" href="javascript:dangerSwitchHandler()"<pre>/!\DANGER/!\</pre></a>;  /* danger area initialize */
+divToolbar.innerHTML += '<a id="dangerswitcher" href="javascript:dangerSwitchHandler()"<pre>/!\DANGER/!\</pre></a>;'  /* danger area initialize */
 var currentStyle = 'day';
 var currentDangerious = 0;
 var currentAdmin = 0;
 
-/* add css switcher */
+/* Initilize for css switcher */
 var currentCSS = document.createElement('style');
 currentCSS.type = 'text/css';
 // currentCSS.id = 'current';
 currentCSS.innerHTML = dayCSS; /* initialize */
 htmlHead[0].appendChild(currentCSS);
 
-/* add danger switcher */
-var currentDanger = document.createElement('span');
-currentDanger.id = 'danger';
-currentDanger.style.padding = '0 1em';
-currentDanger.style.display = 'none';
-currentDanger.innerHTML += '<a href="javascript:adminSwitchHandler()">ADMIN</a>';
-currentDanger.innerHTML += '<a href="javascript:cssChangeHandler()">Change_CSS</a>';
-htmlHead[0].appendChild(currentDanger);
+/* add danger area */
+var spanDanger = document.createElement('span');
+// currentDanger.id = 'danger';
+spanDanger.style.padding = '0 1em';
+spanDanger.style.display = 'none';
+spanDanger.innerHTML += '<a id="adminswitcher" href="javascript:adminSwitchHandler()">Admin off</a>';
+spanDanger.innerHTML += '<a href="javascript:cssChangeHandler()">Change_CSS</a>';
+divToolbar.appendChild(spanDanger);
 
 
 /* danger switch handler */
-function cssSwitchHandler() {
+function dangerSwitchHandler() {
   if(currentDangerious) {
-    currentDanger.style.display = 'none';
+    spanDanger.style.display = 'none';
     
     currentDangerious = 0;
   } else {
-    currentDanger.style.display = 'inline';
+    spanDanger.style.display = 'inline';
     
     currentDangerious = 1;
   }
+}
 
 /* css switch handler */
 function cssSwitchHandler() {
   if(currentStyle == 'day') {
     currentCSS.innerHTML = nightCSS;
     document.getElementById('cssswitcher').innerHTML = "CSS on";
-    
     currentStyle = 'night';
   } else {
     currentCSS.innerHTML = dayCSS;
     document.getElementById('cssswitcher').innerHTML = "CSS off";
-    
     currentStyle = 'day';
   }
+}
 
 function cssChangeHandler() {
   nightCSS = prompt("Replace the nightCSS");
@@ -289,22 +277,22 @@ function cssChangeHandler() {
   if(currentStyle == 'day') {
     currentCSS.innerHTML = nightCSS;
     document.getElementById('cssswitcher').innerHTML = "CSS on";
-    
     currentStyle = 'night';
   } else {
     currentCSS.innerHTML = dayCSS;
     currentCSS.innerHTML = nightCSS;
   }
+}
 
 function adminSwitchHandler() {
   if(currentAdmin) {
-    /* adminTools display none */
-    document.getElementById('danger').innerHTML = "Admin off";
+    switchadmin(currentAdmin);
+    document.getElementById('adminswitcher').innerHTML = "Admin off";
 
     currentStyle = 0;
   } else {
-    /* adminTools display inline */
-    document.getElementById('danger').innerHTML = "Admin on";
+    switchadmin(currentAdmin);
+    document.getElementById('adminswitcher').innerHTML = "Admin on";
     
     currentAdmin = 1;
   }
@@ -324,7 +312,8 @@ function callResize(objWindow, objTag) {
   var heightNew = objWindow.document.getElementsByTagName('body')[0].clientHeight + 10; /* the num is MAGIC */
   var widthNew = objWindow.document.getElementsByTagName('body')[0].clientWidth;
   objTag.id = 'resizeme';
-  alert('chekc id: resizeme')
+//  alert('chekc id: resizeme');  debug
+  //      alert('stop');
   resizeframe(i, heightNew, widthNew);
   }
 
@@ -333,7 +322,6 @@ function styletheframes(targetObj) {
 var frameList = targetObj.frames;
 frameList[frameList.length - 1].onload = window.setTimeout(diveintoframes, 10000); /* the delay num is MAGIC */
 
-  
 function diveintoframes() {  /* dirty hack, may cause problem */
 var frameTag = document.getElementsByTagName('iframe');
 //  alert(frameTag.length);
@@ -359,25 +347,16 @@ for(var i = 0; i < frameList.length; ++i){ /* It's MAGIC, IDK why it's (.length)
     
   if(frameList[i].frames.length)  {
     styletheframes(frameList[i]);
-    alert(frameList[i].document.body.innerHTML);
+    // alert(frameList[i].document.body.innerHTML);  debug
     callResize(frameList[i], frameTag[i]);
   } else {
     callResize(frameList[i], frameTag[i]);
     
-    
-    
-    
-    
-    
-    
+
   }
  // callResize(frameList[i], frameTag[i]);
-  
-  
-
 
 }
-  
 }
 }
 styletheframes(window);
@@ -386,10 +365,3 @@ styletheframes(window);
 
 
 
-
-
-
-/*
-Exception: prompt aborted by user
-@426
-*/
