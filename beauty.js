@@ -29,16 +29,14 @@ for(var i = 0; i < iframeQuote.length; i++) {
     /* replase tag <font> with tag <iframe> */
     tagIFrame[i] = document.createElement("iframe");
     tagIFrame[i].src = iframeSrc;
-    tagIFrame[i].scrolling = 'no'
+    tagIFrame[i].scrolling = 'no';
     iframeParents[i] = iframeQuote[i].parentNode;
     iframeParents[i].replaceChild(tagIFrame[i], iframeQuote[i]);   
     
   }
 }
-  // return 1;
 }
-/* first run without iframe */
-betterquote(window);
+betterquote(window);  /* first run without iframe */
 
 /* hidden the left_menu by default */
 var left_menu = document.getElementById("menu");
@@ -60,12 +58,11 @@ left_menu.onmouseout = function() {
 
 /* fix margin after auto hidden left_menu */
 var right_content = document.getElementById("right_content");
-// alert(right_content.style.margin);
 right_content.style.margin = '0px';
 
 
 /* enable the hidden admin Tools, horrible */
-fucntion switchadmin(keycode) {
+function switchadmin(keycode) {
   var adminTool = document.getElementsByClassName("adminTool");
   for(var key in adminTool) {
     if(adminTool.hasOwnProperty(key)) {
@@ -81,7 +78,7 @@ fucntion switchadmin(keycode) {
 
 
 /* 
- * no hr displays, useless
+ * no hr displays, useless for now
 var uselessHr = document.getElementById("right_content").getElementsByTagName("hr");
 uselessHr[0].style.display = 'none';
  */
@@ -97,7 +94,6 @@ for(var i = 0; i < badNotice.length -1; i++) {
 
 /* hr tags process */
 var marginHr = document.getElementsByTagName("hr");
-// alert(marginHr[0].style);
 for (var key in marginHr) {
    if(marginHr.hasOwnProperty(key)) {
 //     marginHr[key].style.margin = '0 0 50px 0';
@@ -120,15 +116,11 @@ for(var i = 0; i < divThreads.length; i++) {
     divThreads[i].classList.add('threadfly');
 //    divThreads[i].style.width = '49%';
 //    divThreads[i].style.float = 'left';
-//    alert(divThreads.className);
   }
-//  alert(divStyle.clear);
   
   /* for 2up sytle, del nonsense clear:both */
   if(divStyle.clear.search('both') !== -1) {
 
-//    alert(k);
-//    if(1) {
     if(k == 1) {
       divStyle.clear = 'none';
 //      hrThreads[i++].style.display = 'none';
@@ -163,7 +155,6 @@ for(var key in divThread) {
   if(divThread.hasOwnProperty(key)) {
     var blockOP = divThread[key].getElementsByTagName('blockquote')[0];
     var blockOPPic = divThread[key].getElementsByTagName('a')[0];
-//    blockOP.style.paddingBottom = '6em'; /* fix the bad layout */
     blockOP.classList.add('originpost');
     blockOPPic.classList.add('originpost-pic');
   }
@@ -178,15 +169,9 @@ for(var key in timefix) {
     var monthPost = timePost.substr(4, 3);
     var dayPost = timePost.substr(8, 2);
     
-//    alert(weekdayPost);alert(monthPost);alert(dayPost);
     timePost = weekdayPost + ', ' + dayPost + ' ' + monthPost + timePost.slice(10, -5);    
-//    alert(timePost.length);
-//    timePost = timePost.substring(0, 35); /* dirty hack strip the finnal parenthetical */
-//    alert(timePost);
     var dateObj = new Date(timePost);
-//          alert(timefix[key].innerHTML);
     timefix[key].innerHTML = '<span>' + dateObj.toLocaleDateString() + ' ' + dateObj.toLocaleTimeString("zh-CN", "Asia/Berjing") + '</span><br />';
-//    alert(dateObj.getDate());
     
   }
 }
@@ -198,7 +183,6 @@ var key = tableNavigation.length - 1;
 //  for(var i = 0; i < tableNavigation.length - 1; i++) {
 
   if(tableNavigation[key].align == 'left') {
-//    alert('aaaaa');
     tableNavigation[key].classList.add('nav-bottom');
     tableNavigation[key].align = '';
   }
@@ -249,11 +233,9 @@ divToolbar.appendChild(spanDanger);
 function dangerSwitchHandler() {
   if(currentDangerious) {
     spanDanger.style.display = 'none';
-    
     currentDangerious = 0;
   } else {
     spanDanger.style.display = 'inline';
-    
     currentDangerious = 1;
   }
 }
@@ -288,12 +270,10 @@ function adminSwitchHandler() {
   if(currentAdmin) {
     switchadmin(currentAdmin);
     document.getElementById('adminswitcher').innerHTML = "Admin off";
-
     currentStyle = 0;
   } else {
     switchadmin(currentAdmin);
     document.getElementById('adminswitcher').innerHTML = "Admin on";
-    
     currentAdmin = 1;
   }
  
@@ -360,8 +340,5 @@ for(var i = 0; i < frameList.length; ++i){ /* It's MAGIC, IDK why it's (.length)
 }
 }
 styletheframes(window);
-
-
-
 
 
