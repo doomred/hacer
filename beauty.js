@@ -91,12 +91,6 @@ uselessHr[0].style.display = 'none';
  */
 
 
-/* hide the ugly post form at top with dirty hack */
-var badNotice = document.getElementById("postform_tbl").getElementsByTagName("tr");
-// var badNotice = badNotice[0].document.getElementsByTagName("tr");
-for(var i = 0; i < badNotice.length -1; i++) {
-  badNotice[i].style.display = 'none';
-}
 
 
 /* hr tags process */
@@ -187,7 +181,6 @@ for(var key in timefix) {
 var tableNavigation = document.getElementsByTagName('table');
 var key = tableNavigation.length - 1;
 //  alert(tableNavigation[tableNavigation.length - 1].align);
-//  for(var i = 0; i < tableNavigation.length - 1; i++) {
 
   if(tableNavigation[key].align == 'left') {
     tableNavigation[key].classList.add('nav-bottom');
@@ -196,7 +189,7 @@ var key = tableNavigation.length - 1;
   
 /* add CSS class toolbar-bottom */
 var divToolbar = document.body.getElementsByTagName('div');
-for(var i = 0; i < divToolbar.length - 1; i++){
+for(var i = 0; i < divToolbar.length; i++){
   if(divToolbar[i].style.width == '100%') {
     divToolbar[i].classList.add('toolbar-bottom');
   }
@@ -212,35 +205,53 @@ for(var i = 0; i < aTag.length; i++) {
  */
 
 /* Use hbox to popup the Images
- * origin via:  http://www.codeproject.com/Articles/32819/JavaScript-Image-Popup
+ * edited from:  http://www.codeproject.com/Articles/32819/JavaScript-Image-Popup
  */
 var divHbox = document.createElement('div');
 divHbox.id = 'thebox';
 document.body.appendChild(divHbox);
 
 function hboxClickHandler() {
-  document.onclick = null;
-  document.getElementById('thebox').style.visibility = 'hidden';
+  divHbox.style.visibility = 'hidden';
 }
 
 /* test run, dirty hack */
+var key = 0;  /* initilize the array pointer */
+var originURLList = new Array(0);  /* initilize the array */
+//window.originURLList = new Array(0);  /* initilize the array */
 for(var k = 0; k < divThreads.length; k++) {
-alert(k);
+//alert(k);
   var anyAnchorTag = divThreads[k].getElementsByTagName('a');
   for(var i = 0; i < anyAnchorTag.length; i++) {
     var innerImgTag = anyAnchorTag[i].getElementsByTagName('img');
     if(innerImgTag.length) {
-      var originURL =  anyAnchorTag[i].href;
-alert(originURL);
-      innerImgTag[0].onmouseover = function() {
-      //    document.onclick = hboxClickHandler;
+      originURLList.push(anyAnchorTag[i].href);
+//alert(anyAnchorTag[i].target);
+
+      
+
+      (function(url) {
+        anyAnchorTag[i].addEventListener('click', function() { 
+//alert(url);
+//alert(key);
+          divHbox.onclick = hboxClickHandler; /* dirty hack, only click in the img works */
           divHbox.style.visibility='visible';
           var imgTag = document.createElement("img");
-alert(originURL + 'the same');
-          imgTag.src = originURL;
+
+          imgTag.src = url;
           divHbox.innerHTML='';
           divHbox.appendChild(imgTag);
-      };
+      });
+        
+       })(originURLList[key]);
+      
+                             
+                                      
+                                      
+      key += 1;
+      /* fix the origin anchor */
+      anyAnchorTag[i].target = '';
+      anyAnchorTag[i].href = 'javascript:void(0);';
     }
   
   }
@@ -261,6 +272,7 @@ htmlHead[0].appendChild(stylehboxCSS);
 /* add links to the toolbar-bottom */
 var divToolbar = document.getElementsByClassName('toolbar-bottom')[0];
 divToolbar.innerHTML += '<a id="cssswitcher" href="javascript:cssSwitchHandler()">CSS off</a>'; /* initialize */
+divToolbar.innerHTML += '<a id="writepadswitcher" href="javascript:padSwitchHandler()">writepad</a>'; /* initialize writepad*/
 divToolbar.innerHTML += '<a id="dangerswitcher" href="javascript:dangerSwitchHandler()"<pre>\/!\\DANGER\/!\\</pre></a>';  /* danger area initialize */
 var currentStyle = 'day';
 var currentDangerious = 0;
@@ -279,9 +291,74 @@ var spanDanger = document.createElement('span');
 spanDanger.id = 'dangerarea';
 // spanDanger.style.padding = '0 1em';
 spanDanger.style.display = 'none';
+spanDanger.style.background = 'yellow';
 spanDanger.innerHTML += '<a id="adminswitcher" href="javascript:adminSwitchHandler()">Admin off</a>';
 spanDanger.innerHTML += '<a href="javascript:cssChangeHandler()">Change_CSS</a>';
 divToolbar.appendChild(spanDanger);
+
+/* add writepad */
+var padDisplay = 0;
+var divPad = document.createElement('div');
+divPad.id = 'writepad';
+var tableContent = document.getElementById('postform_main').innerHTML;
+
+/* replace origin element */
+var listAbandon = ['postform_tbl', '_csrf', 'emotion', 'content', 'postform_main'];  
+for(var i = 0; i < listAbandon.length; i++) {
+  var currentAbandon = document.getElementById(listAbandon[i]);
+//  alert(currentAbandon.id);
+  currentAbandon.id += 'abandon';
+}
+
+/* rebuild the postform_main */
+var formTag = document.createElement('form');  
+formTag.id = 'postform_main';
+formTag.enctype = 'multipart/form-data';
+formTag.method = 'post';
+formTag.action = '/综合版1/create';
+formTag.innerHTML = tableContent;
+
+/* temp style it */
+divPad.style.position = 'fixed';
+divPad.style.top = '50px';
+divPad.style.left = '50px';
+divPad.style.padding = '3em 0 0 0';
+divPad.style.background = 'grey';
+divPad.style.display = 'none';
+divPad.appendChild(formTag);
+document.body.appendChild(divPad);
+
+/* make the pad grabbable */
+divPad.addEventListener('mousedown',function(e) {
+//alert('getting in');
+  if(!e && window.event)  var e = window.event;
+  pleft = parseInt(divPad.style.left);
+  ptop = parseInt(divPad.style.top);
+  xcoor = e.clientX;
+  ycoor = e.clientY;
+  document.onmousemove = moveBox;
+  document.onmouseup = mouseup;
+  return false;
+
+  function moveBox(e) {
+    if(!e && window.event)  var e = window.event;
+    divPad.style.left = pleft+e.clientX-xcoor+"px";
+    divPad.style.top = ptop+e.clientY-ycoor+"px";
+    return false;
+  }
+
+  function mouseup() {
+    document.onmousemove = null;
+  }
+});
+
+/* hide origin form at top */
+var badNotice = document.getElementById("postform_tblabandon").getElementsByTagName("tr");
+// var badNotice = badNotice[0].document.getElementsByTagName("tr");
+for(var i = 0; i < badNotice.length - 1; i++) { /* save the last Notice Board */
+  badNotice[i].style.display = 'none';
+}
+
 
 /* add feedback element */
 var anchorFeedback = document.createElement('a');
@@ -301,6 +378,16 @@ function feedReportBack() {
   }
 }
 
+/* writepad switcher handler */
+function padSwitchHandler() {
+  if(padDisplay) {
+    padDisplay = 0;
+    divPad.style.display = 'none';
+  } else {
+    padDisplay = 1;
+    divPad.style.display = 'inline';
+  }
+}
 
 
 
@@ -390,7 +477,7 @@ function diveintoframes() {  /* dirty hack, may cause problem */
 var frameTag = document.getElementsByTagName('iframe');
 //  alert(frameTag.length);
   
-for(var i = 0; i < frameList.length; ++i){ /* It's MAGIC, IDK why it's (.length) not (.length -1) */
+for(var i = 0; i < frameList.length; ++i){
   var contentTd = frameList[i].document.getElementsByTagName('td');
   //  alert(frameList.length);
   contentTd[0].innerHTML = '';
