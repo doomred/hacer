@@ -14,6 +14,11 @@
 
 // ==/UserScript==
 
+/* Many thanks for the followings, without your company,
+ * hacer would not make hacers this kinds of happy!!
+ *   zjworks
+ *
+ */
 
 var dayCSS = '';
 /* need some explain on version of CSS */
