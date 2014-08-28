@@ -14,6 +14,11 @@
 
 // ==/UserScript==
 
+/* Many thanks for the followings, without your company,
+ * hacer would not make hacers this kinds of happy!!
+ *   zjworks
+ *
+ */
 
 var dayCSS = '';
 /* need some explain on version of CSS */
@@ -37,30 +42,28 @@ owCSS.innerHTML += '#dangerswitcher, #cssswitcher {padding: 0 0.5em; }';
 htmlHead[0].appendChild(owCSS);
 
 
-function betterquote(targetObj) {
-/* better Quote display */
-var iframeQuote = targetObj.document.getElementsByTagName("font");
-var tagIFrame = [];
-var iframeParents = [];
+function betterquote(targetObj) {  /* betterQuote display */
+  var iframeQuote = targetObj.document.getElementsByTagName("font");
+  var tagIFrame = [];
+  var iframeParents = [];
 
-for(var i = 0; i < iframeQuote.length; i++) {
-  var colorQuote = iframeQuote[i].color;
+  for(var i = 0; i < iframeQuote.length; i++) {
+    var colorQuote = iframeQuote[i].color;
   
-  if(colorQuote.search('789922') !== -1) {
-    var numPost = iframeQuote[i].innerHTML;
-    numPost = numPost.substr(numPost.search('No') + 3);
-    var iframeSrc = 'http://h.acfun.tv/homepage/ref?tid=' + numPost ;
-    /* replase tag <font> with tag <iframe> */
-    tagIFrame[i] = document.createElement("iframe");
-    tagIFrame[i].src = iframeSrc;
-    tagIFrame[i].scrolling = 'no';
-    iframeParents[i] = iframeQuote[i].parentNode;
-    iframeParents[i].replaceChild(tagIFrame[i], iframeQuote[i]);   
-    
+    if(colorQuote.search('789922') !== -1) {
+      var numPost = iframeQuote[i].innerHTML;
+      numPost = numPost.substr(numPost.search('No') + 3);
+      var iframeSrc = 'http://h.acfun.tv/homepage/ref?tid=' + numPost ;
+
+      /* replase tag <font> with tag <iframe> */
+      tagIFrame[i] = document.createElement("iframe");
+      tagIFrame[i].src = iframeSrc;
+      tagIFrame[i].scrolling = 'no';
+      iframeParents[i] = iframeQuote[i].parentNode;
+      iframeParents[i].replaceChild(tagIFrame[i], iframeQuote[i]);   
+    }
   }
 }
-}
-betterquote(window);  /* first run without iframe */
 
 /* hidden the left_menu by default */
 var left_menu = document.getElementById("menu");
@@ -282,8 +285,6 @@ for(var k = 0; k < divThreads.length; k++) {  /* only anchor in thread is target
 //alert(anyAnchorTag[i].target);
 //alert('check originURLList');
 
-      
-
       (function(url) {
         anyAnchorTag[i].addEventListener('click', function() { 
 //alert(url);
@@ -301,9 +302,6 @@ for(var k = 0; k < divThreads.length; k++) {  /* only anchor in thread is target
       });
         
        })(originURLList[key]);
-      
-                             
-                                      
                                       
       key += 1;
       /* fix the origin anchor */
@@ -530,7 +528,7 @@ alert('chekc id: resizeme');
   resizeframe(objUpWorld, heightNew, widthNew);
 }
 
-function pausecomp(millis) {
+function pausecomp(millis) { /* the busy sleep, debug usage _only_ */
   var date = new Date();
   var curDate = null;
   do { curDate = new Date(); }
@@ -538,7 +536,39 @@ function pausecomp(millis) {
 }
 
 
+
+function betterquoteloop(targetObj) {
+  betterquote(targetObj);
+  var frameList = targetObj.frames;
+  if(frameList.length) {
+    for(var i = 0; i < frameList.length; i++) betterquoteloop(frameList[i]);
+  } 
+}
+betterquoteloop(window);  /* recursive load all quote */
+
 alert(contentTd[0]);  /* stop the script, sclient fail halt */
+return 0;
+
+function betterstyleloop(targetObj) {
+  var frameList = targetObj.frames;
+  if(frameList.length) {
+    for(var i = 0; i < frameList.length; i++) betterstyleloop(frameList[i]);
+    /* after loop, resize self */
+  } else {
+    (function checkonload() {
+      if(targetObj.onload) {
+        /* callresize */
+      } else {
+        targetObj.setTimeout(checkonload, 2000);
+      }
+    })();
+  }
+}
+
+
+
+
+
 
 
 function styletheframes(targetObj) {
