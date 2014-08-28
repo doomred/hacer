@@ -5,7 +5,8 @@
 // @license ISC
 // @version v0.0.0
 // @icon https://raw.github.com/doomred/hacer/master/hacer_icon.png
-// @author doomred | http://saltyremix.com
+// @author doomred
+// @homepageURL http://saltyremix.com
 // @encoding utf-8
 // @include http://h.acfun.tv/*
 // @run-at document-end
