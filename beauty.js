@@ -4,7 +4,7 @@
 // @description Provide a better HTML architecture for add functions and CSS design. This script is by hacers for hacers.
 // @license ISC
 // @version v0.0.0
-// @icon https://raw.github.com/doomred/hacer/hacer_icon.png
+// @icon https://raw.github.com/doomred/hacer/master/hacer_icon.png
 // @author doomred | http://saltyremix.com
 // @encoding utf-8
 // @include http://h.acfun.tv/*
@@ -39,15 +39,15 @@ htmlHead[0].appendChild(owCSS);
 function betterquote(targetObj) {
 /* better Quote display */
 var iframeQuote = targetObj.document.getElementsByTagName("font");
-var tagIFrame = new Array();
-var iframeParents = new Array();
+var tagIFrame = [];
+var iframeParents = [];
 
 for(var i = 0; i < iframeQuote.length; i++) {
   var colorQuote = iframeQuote[i].color;
   
   if(colorQuote.search('789922') !== -1) {
     var numPost = iframeQuote[i].innerHTML;
-    var numPost = numPost.substr(numPost.search('No') + 3);
+    numPost = numPost.substr(numPost.search('No') + 3);
     var iframeSrc = 'http://h.acfun.tv/homepage/ref?tid=' + numPost ;
     /* replase tag <font> with tag <iframe> */
     tagIFrame[i] = document.createElement("iframe");
@@ -72,11 +72,11 @@ left_menu.style.padding = '0 2em 0 2em';
 left_menu.onmouseover = function() {
   left_menu.style.left = '0px';
   left_menu.style.opacity = 1;
-}
+};
 left_menu.onmouseout = function() {
   left_menu.style.left = '-125px';
   left_menu.style.opacity = 0;
-}
+};
 
 
 /* fix margin after auto hidden left_menu */
@@ -178,7 +178,7 @@ for(var key in divThreads) {
 }
 
 /* use good time format */
-var timefix = document.getElementsByClassName("posttime") 
+var timefix = document.getElementsByClassName("posttime");
 for(var key in timefix) {
   if(timefix.hasOwnProperty(key)) {
     var timePost = timefix[key].innerHTML;
@@ -243,6 +243,7 @@ function hboxClickHandler(e) {
 }
 
 function nullHandler() {  /* useless for now */
+  return false;
 }
 
 function imageOnloadHandler() {
@@ -306,7 +307,7 @@ for(var k = 0; k < divThreads.length; k++) {  /* only anchor in thread is target
       key += 1;
       /* fix the origin anchor */
       anyAnchorTag[i].target = '';
-      anyAnchorTag[i].href = 'javascript:void(0);';
+      anyAnchorTag[i].href = 'javascript:void(0);';  /* dirty hack */
     }
   
   }
