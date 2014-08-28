@@ -1,3 +1,12 @@
+/* LICENSE: ISC
+ * Discreption: This CSS works for 'hacer' as the style for thread image popup 
+ *              viewer-->hbox _have_to_ merge into 'hacer' by hands(for now)
+ * Edit & Optimize By:
+ *             dye E. jarhoo(github.com/doomred)
+ * Many Thanks To:
+ *              
+ */
+
 #thebox {
     display: table-cell;
     vertical-align: middle;
