@@ -1,14 +1,27 @@
-#thebox 
-{
-    vertical-align : middle;
-    position : absolute;
-    border: 1px solid #999;
-    background : #FFFFFF; 
+#thebox {
+    display: table-cell;
+    vertical-align: middle;
+    /* background-image  Been moved to js for display on demond */
+    background-position: center;
+    background-repeat: no-repeat;
     filter: Alpha(Opacity=100);
-    visibility : hidden;
-    height : 200px;
-    width : 200px;
-    z-index : 120;  /* above the nav-bottom */
-    overflow : hidden;
-    text-align : center;
+    visibility: hidden;
+    z-index: 120;  /* above the box-bg */
+    margin-left: auto;
+    margin-right: auto;
 }
+
+#box-bg {
+    position: fixed;
+    display: table;
+    z-index: 110; /* above the nav-bottom */
+    top: 0px;
+    left: 0px;
+    text-align: center;
+    width: 100% !important;
+    height: 100% !important;
+    background-color: rgba(0, 0, 0, 0.8);
+    visibility: hidden;
+    transition: all 0.5s ease-in-out;
+}
+

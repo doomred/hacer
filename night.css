@@ -8,7 +8,6 @@ body{
   background-repeat: no-repeat;
   color:rgb(198,198,198) !important;
   transition:background .5s ease-in-out;
-  margin:-16px !important; /* dirty hack */
 }
 
 #right_content{
