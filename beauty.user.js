@@ -58,7 +58,7 @@ function betterquote(targetObj) {  /* betterQuote display */
       /* replase tag <font> with tag <iframe> */
       tagIFrame[i] = document.createElement("iframe");
       tagIFrame[i].src = iframeSrc;
-      tagIFrame[i].scrolling = 'no';
+//      tagIFrame[i].scrolling = 'no';  debug usage
       iframeParents[i] = iframeQuote[i].parentNode;
       iframeParents[i].replaceChild(tagIFrame[i], iframeQuote[i]);   
     }
@@ -524,7 +524,6 @@ function callResize(objWindow, objTag, objUpWorld) {
   if(inRecursive)
 alert('chekc id: resizeme');
 //alert('stop');
-//alert(objTag.innerHTML); BUG SAME AS 509
   resizeframe(objUpWorld, heightNew, widthNew);
 }
 
@@ -540,14 +539,17 @@ function pausecomp(millis) { /* the busy sleep, debug usage _only_ */
 function betterquoteloop(targetObj) {
   betterquote(targetObj);
   var frameList = targetObj.frames;
+//  var frameTag = targetObj.document.getElementsByTagName('iframe');
   if(frameList.length) {
-    for(var i = 0; i < frameList.length; i++) betterquoteloop(frameList[i]);
+    for(var i = 0; i < frameList.length; i++) {
+//alert(frameList[i].document.body.innerHTML + 'the_frame');
+      betterquoteloop(frameList[i]);
+    }
   } 
 }
 betterquoteloop(window);  /* recursive load all quote */
 
 alert(contentTd[0]);  /* stop the script, sclient fail halt */
-return 0;
 
 function betterstyleloop(targetObj) {
   var frameList = targetObj.frames;
@@ -614,7 +616,6 @@ alert(frameList[i].document.body.innerHTML + ':the_recursive');
     callResize(frameList[i], frameTag[i], targetObj);
   } else {
 //alert(i);
-//alert(frameTag[i].getElementsByTagName('body')[0].innerHTML); BUG IN LINE
 //alert(frameList[i].document.body.innerHTML + ':the_same');
     /* no resize for non-recursive posts  */
     callResize(frameList[i], frameTag[i], targetObj); /* the frameTag[i] is a hack equal to frameList[i] but in upper document view */
