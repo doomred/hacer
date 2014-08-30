@@ -203,8 +203,8 @@ for(var i = 0; i < aTag.length; i++) {
  */
 
 /* Use hbox to popup the Images
- * edited from:  http://www.codeproject.com/Articles/32819/JavaScript-Image-Popup
- */
+ * Rewrite from:  http://www.codeproject.com/Articles/32819/JavaScript-Image-Popup
+ * Start Initializing/
 var divHbox = document.createElement('div');
 divHbox.id = 'thebox';
 var divHboxBG = document.createElement('div');
@@ -212,16 +212,21 @@ divHboxBG.id = 'box-bg';
 divHboxBG.appendChild(divHbox);
 document.body.appendChild(divHboxBG);
 // makegrabbable(divHbox);  /* it's a nonsense idea */
+/* add hboxstuff style */
+var stylehboxCSS = document.createElement('style');
+stylehboxCSS.type = 'text/css';
+stylehboxCSS.innerHTML = hboxCSS;
+htmlHead[0].appendChild(stylehboxCSS);
 
-function hboxClickHandler(e) {
+function hboxCloseHandler(e) {
   var eventSender = (typeof(window.event) != "undefined") ? e.srcElement : e.target;
 //alert(eventSender.id);
   if(eventSender.id == 'thebox') {
     divHbox.style.visibility = 'hidden';
     divHboxBG.style.visibility = 'hidden';
-    divHbox.style.backgroundImage = 'url("data:image/gif;base64,R0lGODlhyAAyAKECAI0gF/z9+v8AAP8AACH/C05FVFNDQVBFMi4wAwEAAAAh/iRDcmVhdGVkIHdpdGggR0lNUCwKYnkgZG9vbXJlZEBnaXRodWIAIfkEBQoAAgAsAAAAAMgAMgAAAv6Mj6nL7Q+jnLTai7PevPsPhuJIluaJpurKtu4Lx/JM1/aN5/rO9/4PDAqHxKLxiEwql8ymUwkAyKIV6YLKwGa0z6yVEg2Lx+MG10BOK8LmL+bcTcAf6TrZu7az5fPAfuvGpDcYiEZYh8d35/Dnd1jY1vWImAfp5aZnKGHneDjRF+dYBVqJkCm6qWZKejC5iFQIZ2k4W8r4xRqpGOH6WtSI2goKfFv7l5vYeboaO0c81Mj1LFy724ZbfUm9TH0FOS0kjV0NbuuN6Zl3zuv8jdxzjA3RK3bNPGi+muq+/vS+3UubPmb2aD0iqC5fEHq+aH1qFy0QuHrK0jlMaA0aQ8+KCNk1K6OpoyKOnUR2w2iSSMRsKUepOvOM0sWZ9+glkcXy5Js7bGDilIIF6MGaAWE1QzkQkFArTCU6C2kQX0uIN/kZTMZhZUZvRDlNdZdzB0SSSDVobSlsK012oYKNJBd2njinxtA11Zmq7TBW5VwmxYsxXtO4bv2hu1ewQ0SFfNYG/QdV0mC67UAIZjyQVN+yTVRVmmtZC1VdxSAXdkJWYGTFj8Hekmv6dNsLhHltopMt9urZvHv7/g08uPDhxIsbP448ufLlzJs7fw49RgEAIfkEBQoAAwAsIgAOAIcAGgAAAv6cjwOQ7Q+jYjLRtmCucXN3fdNCliYpGieqYkqXxl/I0bP8sAhjtz0Ow/V4qyJPdpIcDz/gzDgqgl630K+pmZqiW2cMqxUtVUnqd0sbd6DckmX6zoJ3Zm8tXJnnmPUWvamm1Pemd+eXRZiiFmg1+CfmyFcIcwFmEyiY5uKTCQkYibiZmAeKJ0lHRmok9XmJ5jYadzf5MkdbGhorl0u2sfrouUr0q9spaolLNdlIi2lX6yl6aCo7vejovMtXbOxEQQTqvOTBeeoi1ZbRCFfl9X2UHU/o+6ophFrNdPUMr7xtns9Otj3r2H17NgsYwBrD6nGjhG/eQIS6GCVjt5Div09N5PZQvKapmbJKF4FgmQjtYzKUCseVvLeDWSuNFh9Sm1BOI76DqDrqbDmI5cZzPyP6PMRMJ0uhStQVlaSn462EKW3CfKryZyFLtqamglAAACH5BAUKAAMALK8AIgAMAAMAAAIJhIdpC6nc3FgFACH5BAUKAAMALMEAIgADAAMAAAIDhH8FADs=")';  /* remove the loading gif */
+    divHboxBG.onclick = hboxCloseHandler;
+    divHbox.style.backgroundImage = 'url("data:image/gif;base64,R0lGODlhyAAyAKECAI0gF/z9+v8AAP8AACH/C05FVFNDQVBFMi4wAwEAAAAh/iRDcmVhdGVkIHdpdGggR0lNUCwKYnkgZG9vbXJlZEBnaXRodWIAIfkEBQoAAgAsAAAAAMgAMgAAAv6Mj6nL7Q+jnLTai7PevPsPhuJIluaJpurKtu4Lx/JM1/aN5/rO9/4PDAqHxKLxiEwql8ymUwkAyKIV6YLKwGa0z6yVEg2Lx+MG10BOK8LmL+bcTcAf6TrZu7az5fPAfuvGpDcYiEZYh8d35/Dnd1jY1vWImAfp5aZnKGHneDjRF+dYBVqJkCm6qWZKejC5iFQIZ2k4W8r4xRqpGOH6WtSI2goKfFv7l5vYeboaO0c81Mj1LFy724ZbfUm9TH0FOS0kjV0NbuuN6Zl3zuv8jdxzjA3RK3bNPGi+muq+/vS+3UubPmb2aD0iqC5fEHq+aH1qFy0QuHrK0jlMaA0aQ8+KCNk1K6OpoyKOnUR2w2iSSMRsKUepOvOM0sWZ9+glkcXy5Js7bGDilIIF6MGaAWE1QzkQkFArTCU6C2kQX0uIN/kZTMZhZUZvRDlNdZdzB0SSSDVobSlsK012oYKNJBd2njinxtA11Zmq7TBW5VwmxYsxXtO4bv2hu1ewQ0SFfNYG/QdV0mC67UAIZjyQVN+yTVRVmmtZC1VdxSAXdkJWYGTFj8Hekmv6dNsLhHltopMt9urZvHv7/g08uPDhxIsbP448ufLlzJs7fw49RgEAIfkEBQoAAwAsIgAOAIcAGgAAAv6cjwOQ7Q+jYjLRtmCucXN3fdNCliYpGieqYkqXxl/I0bP8sAhjtz0Ow/V4qyJPdpIcDz/gzDgqgl630K+pmZqiW2cMqxUtVUnqd0sbd6DckmX6zoJ3Zm8tXJnnmPUWvamm1Pemd+eXRZiiFmg1+CfmyFcIcwFmEyiY5uKTCQkYibiZmAeKJ0lHRmok9XmJ5jYadzf5MkdbGhorl0u2sfrouUr0q9spaolLNdlIi2lX6yl6aCo7vejovMtXbOxEQQTqvOTBeeoi1ZbRCFfl9X2UHU/o+6ophFrNdPUMr7xtns9Otj3r2H17NgsYwBrD6nGjhG/eQIS6GCVjt5Div09N5PZQvKapmbJKF4FgmQjtYzKUCseVvLeDWSuNFh9Sm1BOI76DqDrqbDmI5cZzPyP6PMRMJ0uhStQVlaSn462EKW3CfKryZyFLtqamglAAACH5BAUKAAMALK8AIgAMAAMAAAIJhIdpC6nc3FgFACH5BAUKAAMALMEAIgADAAMAAAIDhH8FADs=")';  /* revoke the loading gif */
   }
-
 }
 
 function nullHandler() {  /* useless for now */
@@ -229,12 +234,12 @@ function nullHandler() {  /* useless for now */
 }
 
 function imageOnloadHandler() {
+  /* image resize on oversized */
   var imgTag = document.getElementById('imageinbox');
   var heightPic = imgTag.clientHeight;
   var widthPic = imgTag.clientWidth;
   var heightWindow = window.innerHeight ? window.innerHeight : document.documentElement.offsetHeight;
   var widthWindow = window.innerWidth ? window.innerWidth : document.documentElement.offsetWidth;
-//  alert(widthPic + ' ' + widthWindow);
   if(heightPic > heightWindow) {
     alert('The image is shrinked, right click to view the full resolution');
     imgTag.height = heightWindow - 20;
@@ -248,40 +253,31 @@ function imageOnloadHandler() {
   divHbox.style.backgroundImage = '';  /* remove the loading gif */
 }
 
+function hboxLauncher(e) {
+    var imageSource = e.target.href;
+    divHbox.style.visibility='visible';
+    divHboxBG.style.visibility = 'visible';
+    var imgTag = document.createElement("img");
+    imgTag.id = 'imageinbox';
+    imgTag.src = imageSource;
+    imgTag.onload = imageOnloadHandler;
+    divHbox.innerHTML='';
+    divHbox.appendChild(imgTag);
+
+}
 
 
-
-/* hbox code block */
-var key = 0;  /* initilize the array pointer */
-var originURLList = new Array(0);  
-for(var k = 0; k < divThreads.length; k++) {  /* only anchor in thread is target */
+var divThreads = document.getElementsByClassName("threadfly"); 
+//  var originURLList = new Array(0);  
+for(var k = 0; k < divThreads.length; k++) {  /* anchor @thread is target */
   var anyAnchorTag = divThreads[k].getElementsByTagName('a');
   for(var i = 0; i < anyAnchorTag.length; i++) {
     var innerImgTag = anyAnchorTag[i].getElementsByTagName('img');
     if(innerImgTag.length) {
-      originURLList.push(anyAnchorTag[i].href);
-//alert(anyAnchorTag[i].target);
-//alert('check originURLList');
+      anyAnchorTag.onclick = hboxLauncher;
+//      anyAnchorTag.class = 'hbox';
+//      originURLList.push(anyAnchorTag[i].href);
 
-      (function(url) {
-        anyAnchorTag[i].addEventListener('click', function() { 
-//alert(url);
-//alert(key);
-//alert('entering event');
-          divHboxBG.onclick = hboxClickHandler;
-          divHbox.style.visibility='visible';
-          divHboxBG.style.visibility = 'visible';
-          var imgTag = document.createElement("img");
-          imgTag.id = 'imageinbox';
-          imgTag.src = url;
-          imgTag.onload = imageOnloadHandler;
-          divHbox.innerHTML='';
-          divHbox.appendChild(imgTag);
-      });
-        
-       })(originURLList[key]);
-                                      
-      key += 1;
       /* fix the origin anchor */
       anyAnchorTag[i].target = '';
       anyAnchorTag[i].href = 'javascript:void(0);';  /* dirty hack */
@@ -290,15 +286,11 @@ for(var k = 0; k < divThreads.length; k++) {  /* only anchor in thread is target
   }
 }
 
+function imageparse() {  /* make anchor useless and parse image */
 
 
 
 
-/* for initilize hboxstuff style */
-var stylehboxCSS = document.createElement('style');
-stylehboxCSS.type = 'text/css';
-stylehboxCSS.innerHTML = hboxCSS;
-htmlHead[0].appendChild(stylehboxCSS);
 
 
 
