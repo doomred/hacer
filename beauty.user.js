@@ -603,6 +603,10 @@ function styletheframe(targetObj) {  /* insert css into iframe */
   iframeCSS.innerHTML += 'table {padding: 0; width: 22em;}';
   /* add condition on css switch */
   iframeHead.appendChild(iframeCSS);
+  var frameAnchor = targetObj.document.getElementsByTagName('a');
+  for(var i = 0; i < frameAnchor.length; i++) {
+    frameAnchor[i].target = '_blank';
+  }
 
 
 
