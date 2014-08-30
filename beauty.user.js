@@ -286,7 +286,22 @@ for(var k = 0; k < divThreads.length; k++) {  /* anchor @thread is target */
   }
 }
 
-function imageparse() {  /* make anchor useless and parse image */
+function imageparse(targetObj) {  /* make anchor useless and parse image */
+  var divThreads = targetObj.document.getElementsByClassName("threadfly"); 
+  var anyAnchorTag = divThreads[k].getElementsByTagName('a');
+    for(var i = 0; i < anyAnchorTag.length; i++) {
+      var innerImgTag = anyAnchorTag[i].getElementsByTagName('img');
+      if(innerImgTag.length) {
+        anyAnchorTag.onclick = hboxLauncher;
+
+      /* fix the origin anchor */
+      anyAnchorTag[i].target = '';
+      anyAnchorTag[i].href = 'javascript:void(0);';  /* dirty hack */
+      }
+  
+    }
+  }
+}
 
 
 
@@ -477,7 +492,7 @@ document.getElementById('refView').style.display = 'none';
 
 
 
-var inRecursive = 0; /* initilize */
+//  var inRecursive = 0; /* initilize */
 /* resize current frame */
 function resizeframe(h, w) {
 }
@@ -571,6 +586,7 @@ function frameOnloadHandler(e) {
   /* ought add browser comptiable, replace e.target */
   var windowCaller = e.target.contentWindow ? e.target.contentWindow : e.target;
   e.target.id = 'resizeme';
+  imageparse(e.target.contentWindow);
 //alert(e.target.id);
   if(!betterquote(windowCaller)) {
     styletheframe(windowCaller);
@@ -596,7 +612,7 @@ function styletheframe(targetObj) {  /* insert css into iframe */
   /* add condition on css switch */
   iframeHead.appendChild(iframeCSS);
   var frameAnchor = targetObj.document.getElementsByTagName('a');
-  for(var i = 0; i < frameAnchor.length; i++) {
+  for(var i = 0; i < frameAnchor.length; i++) {  /* fix in_frame link */
     frameAnchor[i].target = '_blank';
   }
 
@@ -615,14 +631,6 @@ alert(contentTd[0]);  /* stop the script, sclient fail halt */
 
 
 
-function styletheframes(targetObj) {
-  var frameList = targetObj.frames;
-    frameList[frameList.length - 1].onload = window.setTimeout(diveintoframes, 10000); /* the delay num is MAGIC */
-  } else {
-    pausecomp(5000);
-alert('gogogo');
-    diveintoframes();
-  }
   
 function diveintoframes() {
 var frameTag = targetObj.document.getElementsByTagName('iframe');
@@ -660,7 +668,6 @@ for(var i = 0; i < frameList.length; ++i){
   }
  // callResize(frameList[i], frameTag[i]);
 
-}
 }
 }
 
