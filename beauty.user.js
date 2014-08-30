@@ -487,23 +487,20 @@ document.getElementById('refView').style.display = 'none';
 
 var inRecursive = 0; /* initilize */
 /* resize current frame */
-function resizeframe(upworld, h, w) {
-  var objResize = upworld.document.getElementById('resizeme');
+function resizeframe(h, w) {
+}
+
+function callResize(objWindow) {
+  var heightNew = objWindow.document.getElementsByTagName('table')[0].clientHeight + 10; /* the num is MAGIC */
+  var widthNew = objWindow.document.getElementsByTagName('table')[0].clientWidth;
+//  objTag.id = 'resizeme';
+//alert('chekc id: resizeme');
+//alert('stop');
+  var objResize = objWindow.document.getElementById('resizeme');
 //alert('the_same' + objResize);
   objResize.style.height = h + "px";
   objResize.style.width = w + "px";  
-  objResize.id = '';
-}
-
-function callResize(objWindow, objTag, objUpWorld) {
-  var heightNew = objWindow.document.getElementsByTagName('table')[0].clientHeight + 10; /* the num is MAGIC */
-  var widthNew = objWindow.document.getElementsByTagName('table')[0].clientWidth;
-  objTag.id = 'resizeme';
-  if(inRecursive)
-alert('chekc id: resizeme');
-//alert('stop');
-  resizeframe(objUpWorld, heightNew, widthNew);
-}
+//  objResize.id = '';
 
 function pausecomp(millis) { /* busy sleep, debug usage _only_ */
   var date = new Date();
@@ -579,34 +576,39 @@ function betterquote(targetObj) {  /* betterQuote display */
   
 
 function frameOnloadHandler(e) {
+  /* ought add browser comptiable, replace e.target */
   var windowCaller = e.target.contentWindow ? e.target.contentWindow : e.target;
+  e.target.id = 'resizeme';
 //alert(e.target.id);
   if(!betterquote(windowCaller)) {
-//    styletheframe(windowCaller);
-
-
+    styletheframe(windowCaller);
+    callResize(e.target.contentWindow.parent);  /* call resize function */
 
   }
 }
 
-function styletheframe(targetObj) {
-  var frameList = targetObj.frames;
-  if(frameList.length) {
-    for(var i = 0; i < frameList.length; i++) betterstyleloop(frameList[i]);
-    /* after loop, resize self */
-  } else {
-    (function checkonload() {
-      if(targetObj.onload) {
-        /* callresize */
-      } else {
-        targetObj.setTimeout(checkonload, 2000);
-      }
-    })();
-  }
-  if(window.top !== window.parent) {
-    styletheframe();
+function styletheframe(targetObj) {  /* insert css into iframe */
+  if(targetObj.top !== targetObj.parent) {
+
+//  var frameList = targetObj.frames;
+  var iframeHead = targetObj.document.getElementsByTagName('head')[0];
+  var iframeCSS = document.createElement('style');
+  iframeCSS.type = 'text/css';
+  iframeCSS.innerHTML += 'html body tbody tr td font[color="#cc1105"],font[color="#117743"] {display: none;}';
+  iframeCSS.innerHTML += 'html body tbody tr td font[color="#789922"] {color: red;}';
+  iframeCSS.innerHTML += '.posttime {display: none;}';
+  iframeCSS.innerHTML += '.report {display: none;}';
+  iframeCSS.innerHTML += '.threadpost {margin: 0 0 0 0;}';
+  iframeCSS.innerHTML += 'img {width: 30%; height: 30%}';
+  iframeCSS.innerHTML += 'table {padding: 0; width: 22em;}';
+  /* add condition on css switch */
+  iframeHead.appendChild(iframeCSS);
 
 
+
+
+
+  styletheframe(targetObj.parent);
   }
 }
 
@@ -615,16 +617,10 @@ alert(contentTd[0]);  /* stop the script, sclient fail halt */
 
 
 
-alert('quotes ready');
-
-
-
-
 
 
 function styletheframes(targetObj) {
   var frameList = targetObj.frames;
-  if(!inRecursive) {
     frameList[frameList.length - 1].onload = window.setTimeout(diveintoframes, 10000); /* the delay num is MAGIC */
   } else {
     pausecomp(5000);
@@ -659,14 +655,8 @@ for(var i = 0; i < frameList.length; ++i){
   if(frameList[i].frames.length)  {
     inRecursive = 1;
     styletheframes(frameList[i]);
-//alert(frameList[i].document.body.innerHTML);
-alert('recursive back');
-alert(frameList[i].document.body.innerHTML + ':the_recursive');
     callResize(frameList[i], frameTag[i], targetObj);
   } else {
-//alert(i);
-//alert(frameList[i].document.body.innerHTML + ':the_same');
-    /* no resize for non-recursive posts  */
     callResize(frameList[i], frameTag[i], targetObj); /* the frameTag[i] is a hack equal to frameList[i] but in upper document view */
     inRecursive = 0;
     
@@ -677,7 +667,6 @@ alert(frameList[i].document.body.innerHTML + ':the_recursive');
 }
 }
 }
-styletheframes(window);
 
 
 
