@@ -42,28 +42,6 @@ owCSS.innerHTML += '#dangerswitcher, #cssswitcher {padding: 0 0.5em; }';
 htmlHead[0].appendChild(owCSS);
 
 
-function betterquote(targetObj) {  /* betterQuote display */
-  var iframeQuote = targetObj.document.getElementsByTagName("font");
-  var tagIFrame = [];
-  var iframeParents = [];
-
-  for(var i = 0; i < iframeQuote.length; i++) {
-    var colorQuote = iframeQuote[i].color;
-  
-    if(colorQuote.search('789922') !== -1) {
-      var numPost = iframeQuote[i].innerHTML;
-      numPost = numPost.substr(numPost.search('No') + 3);
-      var iframeSrc = 'http://h.acfun.tv/homepage/ref?tid=' + numPost ;
-
-      /* replase tag <font> with tag <iframe> */
-      tagIFrame[i] = document.createElement("iframe");
-      tagIFrame[i].src = iframeSrc;
-//      tagIFrame[i].scrolling = 'no';  debug usage
-      iframeParents[i] = iframeQuote[i].parentNode;
-      iframeParents[i].replaceChild(tagIFrame[i], iframeQuote[i]);   
-    }
-  }
-}
 
 /* hidden the left_menu by default */
 var left_menu = document.getElementById("menu");
@@ -527,31 +505,91 @@ alert('chekc id: resizeme');
   resizeframe(objUpWorld, heightNew, widthNew);
 }
 
-function pausecomp(millis) { /* the busy sleep, debug usage _only_ */
+function pausecomp(millis) { /* busy sleep, debug usage _only_ */
   var date = new Date();
   var curDate = null;
   do { curDate = new Date(); }
   while(curDate-date < millis);
 }
 
+//  var recurKey = 0;
+//  var mainFrameKey = 0;
+  var iframeQuote = window.document.getElementsByTagName("font");
+  var tagIFrame = [];
+  var iframeParents = [];
 
+  for(var i = 0; i < iframeQuote.length; i++) {
+    var colorQuote = iframeQuote[i].color;
+  
+    if(colorQuote.search('789922') !== -1) {
+      var numPost = iframeQuote[i].innerHTML;
+      numPost = numPost.substr(numPost.search('No') + 3);
+      var iframeSrc = 'http://h.acfun.tv/homepage/ref?tid=' + numPost ;
 
-function betterquoteloop(targetObj) {
-  betterquote(targetObj);
-  var frameList = targetObj.frames;
-//  var frameTag = targetObj.document.getElementsByTagName('iframe');
-  if(frameList.length) {
-    for(var i = 0; i < frameList.length; i++) {
-//alert(frameList[i].document.body.innerHTML + 'the_frame');
-      betterquoteloop(frameList[i]);
+      /* replase tag <font> with tag <iframe> */
+      tagIFrame[i] = document.createElement("iframe");
+      tagIFrame[i].src = iframeSrc;
+//      tagIFrame[i].id = 'iframe_' + mainFrameKey;
+      tagIFrame[i].onload = frameOnloadHandler; /* use onload Handler, instead of checkonload */
+//      tagIFrame[i].scrolling = 'no';  debug usage
+      iframeParents[i] = iframeQuote[i].parentNode;
+      iframeParents[i].replaceChild(tagIFrame[i], iframeQuote[i]);   
+//      mainFrameKey += 1;
     }
-  } 
+  }
+
+
+function betterquote(targetObj) {  /* betterQuote display */
+  var iframeQuote = targetObj.document.getElementsByTagName("font");
+//alert(iframeQuote[0]);
+//alert(targetObj);
+  var tagIFrame = [];
+  var iframeParents = [];
+  var numFrames = 0;
+
+  for(var i = 0; i < iframeQuote.length; i++) {
+    var colorQuote = iframeQuote[i].color;
+  
+    if(colorQuote.search('789922') !== -1) {
+      numFrames += 1;
+      var numPost = iframeQuote[i].innerHTML;
+      numPost = numPost.substr(numPost.search('No') + 3);
+      var iframeSrc = 'http://h.acfun.tv/homepage/ref?tid=' + numPost ;
+
+      /* replase tag <font> with tag <iframe> */
+      tagIFrame[i] = document.createElement("iframe");
+      tagIFrame[i].src = iframeSrc;
+//      tagIFrame[i].id = 'iframe_' + mainFrameKey;
+      tagIFrame[i].onload = frameOnloadHandler; /* use onload Handler, instead of checkonload */
+//      tagIFrame[i].scrolling = 'no';  debug usage
+      iframeParents[i] = iframeQuote[i].parentNode;
+      iframeParents[i].replaceChild(tagIFrame[i], iframeQuote[i]);   
+//      mainFrameKey += 1;
+    }
+  }
+  if(numFrames) {
+    return 1;
+  } else {
+    return 0;
+  }
 }
-betterquoteloop(window);  /* recursive load all quote */
 
-alert(contentTd[0]);  /* stop the script, sclient fail halt */
 
-function betterstyleloop(targetObj) {
+//  var mainFrameList = new Array(mainFrameKey);
+  
+
+function frameOnloadHandler(e) {
+  var windowCaller = e.target.contentWindow ? e.target.contentWindow : e.target;
+//alert(e.target.id);
+  if(!betterquote(windowCaller)) {
+//    styletheframe(windowCaller);
+
+
+
+  }
+}
+
+function styletheframe(targetObj) {
   var frameList = targetObj.frames;
   if(frameList.length) {
     for(var i = 0; i < frameList.length; i++) betterstyleloop(frameList[i]);
@@ -565,8 +603,19 @@ function betterstyleloop(targetObj) {
       }
     })();
   }
+  if(window.top !== window.parent) {
+    styletheframe();
+
+
+  }
 }
 
+alert(contentTd[0]);  /* stop the script, sclient fail halt */
+
+
+
+
+alert('quotes ready');
 
 
 
