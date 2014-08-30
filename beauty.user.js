@@ -3,7 +3,7 @@
 // @namespace https://github.com/doomred
 // @description Provide a better HTML architecture for add functions and CSS design. This script is by hacers for hacers.
 // @license ISC
-// @version v0.0.0
+// @version 0.0.1
 // @icon https://raw.github.com/doomred/hacer/master/hacer_icon.png
 // @author doomred
 // @homepageURL http://saltyremix.com
@@ -304,9 +304,9 @@ htmlHead[0].appendChild(stylehboxCSS);
 
 /* add links to the toolbar-bottom */
 var divToolbar = document.getElementsByClassName('toolbar-bottom')[0];
-divToolbar.innerHTML += '<a id="cssswitcher" href="javascript:cssSwitchHandler()">CSS off</a>'; /* initialize */
-divToolbar.innerHTML += '<a id="writepadswitcher" href="javascript:padSwitchHandler()">writepad</a>'; /* initialize writepad*/
-divToolbar.innerHTML += '<a id="dangerswitcher" href="javascript:dangerSwitchHandler()"<pre>\/!\\DANGER\/!\\</pre></a>';  /* danger area initialize */
+divToolbar.innerHTML += '<span id="cssswitcher" onclick="cssSwitchHandler">CSS off</span>'; /* initialize */
+divToolbar.innerHTML += '<span id="writepadswitcher" onclick="padSwitchHandler">writepad</span>'; /* initialize writepad*/
+divToolbar.innerHTML += '<span id="dangerswitcher" onclick="dangerSwitchHandler"<pre>\/!\\DANGER\/!\\</pre></span>';  /* danger area initialize */
 var currentStyle = 'day';
 var currentDangerious = 0;
 var currentAdmin = 0;
