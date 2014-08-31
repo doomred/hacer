@@ -27,6 +27,7 @@ var nightCSS = 'body{background-color:black;background-image:url("http://avdot.n
 var hboxCSS = '#thebox {display: table-cell;vertical-align: middle;background-position: center;background-repeat: no-repeat;filter: Alpha(Opacity=100);visibility: hidden;z-index: 120;margin-left: auto;margin-right: auto;}#box-bg {position: fixed;display: table;z-index: 110;top: 0;left: 0;text-align: center;width: 100% !important;height: 100% !important;background-color: rgba(0, 0, 0, 0.8);visibility: hidden;transition: all 0.5s ease-in-out;}';
   /* overwrite bad CSS plus must have CSS, style goto dayCSS */
 var htmlHead = document.getElementsByTagName("head")[0];
+var htmlBody = document.getElementsByTagName("body")[0];
 var owCSS = document.createElement("style");
 owCSS.type = 'text/css';
 owCSS.innerHTML += '.threadfly {width: 45%; float: left; margin-left: 1%; margin-bottom: 2em;}';
@@ -39,7 +40,15 @@ owCSS.innerHTML += '#postform_tbl p {line-height: 1.5em; }';
 owCSS.innerHTML += '#dangerarea * {padding: 0 1em; background: yellow;}';
 owCSS.innerHTML += '#dangerswitcher, #cssswitcher {padding: 0 0.5em; }';
 owCSS.innerHTML += '#writepad {padding: 1em; background: grey;}';
+owCSS.innerHTML += '#hacerfeedback, #dangerarea, #dangerswitcher, #cssswitcher, #writepadswitcher  {text-decoration: underline; }';
+owCSS.innerHTML += '#alertbox {display: none; font-size: 18pt; position: fixed; top: 80%; left: 0.5em; transition: all 0.66s ease-in-out; background: black; z-index: 200;}';
 htmlHead.appendChild(owCSS);
+
+/* initialize alertNotice */
+var alertNotice = null;
+var alertDiv = document.createElement('div');
+alertDiv.id = 'alertbox';
+htmlBody.appendChild(alertDiv);
 
 
   /* hidden the menu by default */
@@ -147,10 +156,10 @@ for(var key in classPosttime) {
   /* replace the page navigation */
 var tableNavigation = document.getElementsByTagName('table');
 var key = tableNavigation.length - 1;
-  if(tableNavigation[key].align == 'left') {
-    tableNavigation[key].classList.add('nav-bottom');
-    tableNavigation[key].align = '';
-  }
+if(tableNavigation[key].align == 'left') {
+  tableNavigation[key].classList.add('nav-bottom');
+  tableNavigation[key].align = '';
+}
 
   /* add CSS class toolbar-bottom */
 var classToolbar = document.body.getElementsByTagName('div');
@@ -163,7 +172,9 @@ for(var i = 0; i < classToolbar.length; i++){
 
 /* Use hbox to popup the Images
  * Rewrite from:  http://www.codeproject.com/Articles/32819/JavaScript-Image-Popup
- * Start Initializing/
+ * Start Initializing
+ */
+
 var hboxDiv = document.createElement('div');
 hboxDiv.id = 'thebox';
 var hboxbgDiv = document.createElement('div');
@@ -176,13 +187,14 @@ hboxStyle.type = 'text/css';
 hboxStyle.innerHTML = hboxCSS;
 htmlHead.appendChild(hboxStyle);
 
+
+
 function hboxCloseHandler(e) {
   var eventSender = (typeof(window.event) != "undefined") ? e.srcElement : e.target;
 //alert(eventSender.id);
   if(eventSender.id == 'thebox') {
     hboxDiv.style.visibility = 'hidden';
     hboxbgDiv.style.visibility = 'hidden';
-    hboxbgDiv.onclick = hboxCloseHandler;
     hboxDiv.style.backgroundImage = 'url("data:image/gif;base64,R0lGODlhyAAyAKECAI0gF/z9+v8AAP8AACH/C05FVFNDQVBFMi4wAwEAAAAh/iRDcmVhdGVkIHdpdGggR0lNUCwKYnkgZG9vbXJlZEBnaXRodWIAIfkEBQoAAgAsAAAAAMgAMgAAAv6Mj6nL7Q+jnLTai7PevPsPhuJIluaJpurKtu4Lx/JM1/aN5/rO9/4PDAqHxKLxiEwql8ymUwkAyKIV6YLKwGa0z6yVEg2Lx+MG10BOK8LmL+bcTcAf6TrZu7az5fPAfuvGpDcYiEZYh8d35/Dnd1jY1vWImAfp5aZnKGHneDjRF+dYBVqJkCm6qWZKejC5iFQIZ2k4W8r4xRqpGOH6WtSI2goKfFv7l5vYeboaO0c81Mj1LFy724ZbfUm9TH0FOS0kjV0NbuuN6Zl3zuv8jdxzjA3RK3bNPGi+muq+/vS+3UubPmb2aD0iqC5fEHq+aH1qFy0QuHrK0jlMaA0aQ8+KCNk1K6OpoyKOnUR2w2iSSMRsKUepOvOM0sWZ9+glkcXy5Js7bGDilIIF6MGaAWE1QzkQkFArTCU6C2kQX0uIN/kZTMZhZUZvRDlNdZdzB0SSSDVobSlsK012oYKNJBd2njinxtA11Zmq7TBW5VwmxYsxXtO4bv2hu1ewQ0SFfNYG/QdV0mC67UAIZjyQVN+yTVRVmmtZC1VdxSAXdkJWYGTFj8Hekmv6dNsLhHltopMt9urZvHv7/g08uPDhxIsbP448ufLlzJs7fw49RgEAIfkEBQoAAwAsIgAOAIcAGgAAAv6cjwOQ7Q+jYjLRtmCucXN3fdNCliYpGieqYkqXxl/I0bP8sAhjtz0Ow/V4qyJPdpIcDz/gzDgqgl630K+pmZqiW2cMqxUtVUnqd0sbd6DckmX6zoJ3Zm8tXJnnmPUWvamm1Pemd+eXRZiiFmg1+CfmyFcIcwFmEyiY5uKTCQkYibiZmAeKJ0lHRmok9XmJ5jYadzf5MkdbGhorl0u2sfrouUr0q9spaolLNdlIi2lX6yl6aCo7vejovMtXbOxEQQTqvOTBeeoi1ZbRCFfl9X2UHU/o+6ophFrNdPUMr7xtns9Otj3r2H17NgsYwBrD6nGjhG/eQIS6GCVjt5Div09N5PZQvKapmbJKF4FgmQjtYzKUCseVvLeDWSuNFh9Sm1BOI76DqDrqbDmI5cZzPyP6PMRMJ0uhStQVlaSn462EKW3CfKryZyFLtqamglAAACH5BAUKAAMALK8AIgAMAAMAAAIJhIdpC6nc3FgFACH5BAUKAAMALMEAIgADAAMAAAIDhH8FADs=")';  /* revoke the loading gif */
   }
 }
@@ -199,28 +211,48 @@ function imageOnloadHandler() {
   var heightWindow = window.innerHeight ? window.innerHeight : document.documentElement.offsetHeight;
   var widthWindow = window.innerWidth ? window.innerWidth : document.documentElement.offsetWidth;
   if(heightPic > heightWindow) {
-    alert('The image is shrinked, right click to view the full resolution');
-    idImageinbox.height = heightWindow - 20;
+    alertshrink();
+    idImageinbox.height = heightWindow - 40;
   } else {
     if(widthPic > widthWindow) {
-      alert('The image is shrinked, right click to view the full resolution');
-      idImageinbox.width = widthWindow - 20;
+      alertshrink();
+      idImageinbox.width = widthWindow - 40;
     }
   }
-  divHbox.style.backgroundImage = '';  /* remove the loading gif */
+  hboxDiv.style.backgroundImage = '';  /* remove the loading gif */
 }
+
+
+function alertshrink() {
+  alertNotice = 'The image is shrinked, right click to view the full resolution';
+  alertDiv.innerHTML = alertNotice;
+  alertDiv.display = 'inline';
+alert(alertDiv.display);
+//  window.setTimeout(alertoff, 8000);
+}
+
+function alertoff() {
+  alert('off');
+  alertDiv.display = 'none';
+}
+
+
 
 function hboxLauncher(e) {
   var eventSender = (typeof(window.event) != "undefined") ? e.srcElement : e.target;
-    var imageSource = eventSender.href;
-    hboxDiv.style.visibility='visible';
-    hboxbgDiv.style.visibility = 'visible';
-    var hboxImg = document.createElement("img");
-    hboxImg.id = 'imageinbox';
-    hboxImg.src = imageSource;
-    hboxImg.onload = imageOnloadHandler;
-    hboxDiv.innerHTML='';
-    hboxDiv.appendChild(hboxImg);
+  var eventSender = eventSender.parentNode; /* cant click empty anchor */
+  var imageSource = eventSender.rel;
+  var hboxDiv = document.getElementById('thebox');
+  var hboxbgDiv = document.getElementById('box-bg');
+  hboxbgDiv.addEventListener('click',hboxCloseHandler);
+  hboxDiv.style.visibility='visible';
+  hboxbgDiv.style.visibility = 'visible';
+  var hboxImg = document.createElement("img");
+  hboxImg.id = 'imageinbox';
+  hboxImg.src = imageSource;
+  hboxImg.onload = imageOnloadHandler;
+  hboxDiv.innerHTML='';
+  hboxDiv.appendChild(hboxImg);
 }
 
   /* anchor @thread image parse */
@@ -229,10 +261,11 @@ for(var k = 0; k < classThreadfly.length; k++) {
   for(var i = 0; i < anchorThread.length; i++) {
     var imgThread = anchorThread[i].getElementsByTagName('img');
     if(imgThread.length) {
-      anchorThread.onclick = hboxLauncher;
         /* fix the origin anchor */
+      anchorThread[i].rel = anchorThread[i].href;
+      anchorThread[i].addEventListener('click',hboxLauncher);
       anchorThread[i].target = '';
-      anchorThread[i].href = 'javascript:void(0);';  /* dirty hack */
+      anchorThread[i].href = 'javascript:void(0);';  /* dirty hack, use span instead */
     }
   }
 }
@@ -242,8 +275,9 @@ function imageparse(targetObj) {  /* make anchor useless and parse image */
   for(var i = 0; i < anchorThread.length; i++) {
     var imgThread = anchorThread[i].getElementsByTagName('img');
     if(imgThread.length) {
-      anchorThread.onclick = hboxLauncher;
         /* fix the origin anchor */
+      anchorThread[i].rel = anchorThread[i].href;
+      anchorThread[i].addEventListener('click',hboxLauncher);
       anchorThread[i].target = '';
       anchorThread[i].href = 'javascript:void(0);';  /* dirty hack, use span instead */
     }
@@ -253,9 +287,13 @@ function imageparse(targetObj) {  /* make anchor useless and parse image */
 
   /* add links to the toolbar-bottom */
 var classToolbar = document.getElementsByClassName('toolbar-bottom')[0];
-classToolbar.innerHTML += '<span id="cssswitcher" onclick="cssSwitchHandler">CSS off</span>'; /* initialize */
-classToolbar.innerHTML += '<span id="writepadswitcher" onclick="padSwitchHandler">writepad</span>'; /* initialize writepad*/
-classToolbar.innerHTML += '<span id="dangerswitcher" onclick="dangerSwitchHandler"<pre>\/!\\DANGER\/!\\</pre></span>';  /* danger area initialize */
+classToolbar.innerHTML += '<span id="cssswitcher" >CSS off</span>'; /* initialize */
+classToolbar.innerHTML += '<span id="writepadswitcher" >writepad</span>'; /* initialize writepad*/
+classToolbar.innerHTML += '<span id="dangerswitcher" <pre>\/!\\DANGER\/!\\</pre></span>';  /* danger area initialize */
+document.getElementById('cssswitcher').addEventListener('click', cssSwitchHandler);
+document.getElementById('writepadswitcher').addEventListener('click', padSwitchHandler);
+document.getElementById('dangerswitcher').addEventListener('click', dangerSwitchHandler);
+
 
   /* Initilize for switchers */
 var currentStyle = 'day';
@@ -271,9 +309,12 @@ htmlHead.appendChild(currentCSS);
 var spanDanger = document.createElement('span');
 spanDanger.id = 'dangerarea';
 spanDanger.style.display = 'none';
-spanDanger.innerHTML += '<span id="adminswitcher" onclick="adminSwitchHandler">Admin off</span>';
-spanDanger.innerHTML += '<span onclick="cssChangeHandler">Change_CSS</span>';
+spanDanger.innerHTML += '<span id="adminswitcher" >Admin off</span>';
+spanDanger.innerHTML += '<span id="csschanger" >Change_CSS</span>';
 classToolbar.appendChild(spanDanger);
+document.getElementById('adminswitcher').addEventListener('click', adminSwitchHandler);
+document.getElementById('csschanger').addEventListener('click', cssChangeHandler);
+
 
   /* add writepad */
 var padDisplay = 0;
@@ -341,7 +382,7 @@ for(var i = 0; i < trBad.length - 1; i++) { /* save the notice board */
   /* add feedback element */
 var fbAnchor = document.createElement('span');
 fbAnchor.id = 'hacerfeedback';
-fbAnchor.onclick = 'feedreportback';
+fbAnchor.addEventListener('click',feedreportback);
 fbAnchor.style.textAlign = 'right';
 fbAnchor.innerHTML = 'feedback';
 classToolbar.appendChild(fbAnchor);
@@ -442,7 +483,7 @@ function pausecomp(millis) { /* busy sleep, debug usage _only_ */
 
 /* betterquote window */
 var fontBar = window.document.getElementsByTagName("font");
-var quoteframe = [];
+var quoteFrame = [];
 var quoteFrameParent = [];
 for(var i = 0; i < fontBar.length; i++) {
   var tmpColor = fontBar[i].color;
@@ -451,13 +492,13 @@ for(var i = 0; i < fontBar.length; i++) {
     tmp = tmp.substr(tmp.search('No') + 3);
     var quoteFrameSrc = 'http://h.acfun.tv/homepage/ref?tid=' + tmp ;
       /* replase tag <font> with tag <iframe> */
-    quoteframe[i] = document.createElement("iframe");
-    quoteframe[i].src = quoteFrameSrc;
-//      quoteframe[i].id = 'iframe_' + mainFrameKey;
-    quoteframe[i].onload = frameOnloadHandler; /* instead of checkonload */
-//      quoteframe[i].scrolling = 'no';  debug usage
+    quoteFrame[i] = document.createElement("iframe");
+    quoteFrame[i].src = quoteFrameSrc;
+//      quoteFrame[i].id = 'iframe_' + mainFrameKey;
+    quoteFrame[i].onload = frameOnloadHandler; /* instead of checkonload */
+//      quoteFrame[i].scrolling = 'no';  debug usage
     quoteFrameParent[i] = fontBar[i].parentNode;
-    quoteFrameParent[i].replaceChild(quoteframe[i], fontBar[i]);   
+    quoteFrameParent[i].replaceChild(quoteFrame[i], fontBar[i]);   
 //      mainFrameKey += 1;
   }
 }
