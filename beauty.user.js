@@ -106,7 +106,7 @@ for(var i = 0; i < divThreads.length; i++) {
 }
 
   /* dirty hack, check if in thread reply page */
-var classThreadfly = document.getElementByClassName('threadfly');
+var classThreadfly = document.getElementsByClassName('threadfly');
 if(classThreadfly.length == 1)  {
   var blThreadMode = 1;
   owCSS.innerHTML += '.threadfly {width: 80%; margin: 2em 10%; } .threadpost {padding: 0 10em;}';
@@ -121,10 +121,10 @@ for(var i = 0; i < classThreadfly.length; i++, k *= -1) {
 }
 
   /* add class originpost and originpost-pic*/
-for(var key in classThreadflys) {
-  if(classThreadflys.hasOwnProperty(key)) {
-    var bqOP = classThreadflys[key].getElementsByTagName('blockquote')[0];
-    var bqOPpic = classThreadflys[key].getElementsByTagName('a')[0];
+for(var key in classThreadfly) {
+  if(classThreadfly.hasOwnProperty(key)) {
+    var bqOP = classThreadfly[key].getElementsByTagName('blockquote')[0];
+    var bqOPpic = classThreadfly[key].getElementsByTagName('a')[0];
     bqOP.classList.add('originpost');
     bqOPpic.classList.add('originpost-pic');
   }
@@ -174,7 +174,7 @@ document.body.appendChild(hboxbgDiv);
 var hboxStyle = document.createElement('style');
 hboxStyle.type = 'text/css';
 hboxStyle.innerHTML = hboxCSS;
-htmlHead.appendChild(stylehboxCSS);
+htmlHead.appendChild(hboxStyle);
 
 function hboxCloseHandler(e) {
   var eventSender = (typeof(window.event) != "undefined") ? e.srcElement : e.target;
@@ -239,15 +239,13 @@ for(var k = 0; k < classThreadfly.length; k++) {
 
 function imageparse(targetObj) {  /* make anchor useless and parse image */
   var anchorThread = targetObj.document.getElementsByTagName('a');
-    for(var i = 0; i < anchorThread.length; i++) {
-      var imgThread = anchorThread[i].getElementsByTagName('img');
-      if(imgThread.length) {
-        anchorThread.onclick = hboxLauncher;
+  for(var i = 0; i < anchorThread.length; i++) {
+    var imgThread = anchorThread[i].getElementsByTagName('img');
+    if(imgThread.length) {
+      anchorThread.onclick = hboxLauncher;
         /* fix the origin anchor */
-        anchorThread[i].target = '';
-        anchorThread[i].href = 'javascript:void(0);';  /* dirty hack, use span instead */
-      }
-  
+      anchorThread[i].target = '';
+      anchorThread[i].href = 'javascript:void(0);';  /* dirty hack, use span instead */
     }
   }
 }
@@ -344,7 +342,7 @@ for(var i = 0; i < trBad.length - 1; i++) { /* save the notice board */
 var fbAnchor = document.createElement('span');
 fbAnchor.id = 'hacerfeedback';
 fbAnchor.onclick = 'feedreportback';
-fbAnchor.style.text-align = 'right';
+fbAnchor.style.textAlign = 'right';
 fbAnchor.innerHTML = 'feedback';
 classToolbar.appendChild(fbAnchor);
 
@@ -427,9 +425,10 @@ function callResize(objWindow) {
 //alert('stop');
   var idResizeme = objWindow.document.getElementById('resizeme');
 //alert('the_same' + idResizeme);
-  idResizeme.style.height = h + "px";
-  idResizeme.style.width = w + "px";  
+  idResizeme.style.height = heightNew + "px";
+  idResizeme.style.width = widthNew + "px";  
 //  idResizeme.id = '';
+}
 
 function pausecomp(millis) { /* busy sleep, debug usage _only_ */
   var date = new Date();
@@ -468,8 +467,8 @@ function betterquote(targetObj) {  /* betterQuote display */
   var fontBar = targetObj.document.getElementsByTagName("font");
 //alert(fontBar[0]);
 //alert(targetObj);
-  var arrayFrame = [];
-  var arrayFrameParent = [];
+  var quoteFrame = [];
+  var quoteFrameParent = [];
   var numFrames = 0;
   for(var i = 0; i < fontBar.length; i++) {
     var tmpColor = fontBar[i].color;
@@ -484,8 +483,8 @@ function betterquote(targetObj) {  /* betterQuote display */
 //      quoteFrame[i].id = 'iframe_' + mainFrameKey;
       quoteFrame[i].onload = frameOnloadHandler; /* use onload Handler, instead of checkonload */
 //      quoteFrame[i].scrolling = 'no';  debug usage
-      arrayFrameParent[i] = fontBar[i].parentNode;
-      arrayFrameParent[i].replaceChild(quoteFrame[i], fontBar[i]);   
+      quoteFrameParent[i] = fontBar[i].parentNode;
+      quoteFrameParent[i].replaceChild(quoteFrame[i], fontBar[i]);   
 //      mainFrameKey += 1;
     }
   }
