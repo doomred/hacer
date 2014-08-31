@@ -41,13 +41,14 @@ owCSS.innerHTML += '#dangerarea * {padding: 0 1em; background: yellow;}';
 owCSS.innerHTML += '#dangerswitcher, #cssswitcher {padding: 0 0.5em; }';
 owCSS.innerHTML += '#writepad {padding: 1em; background: grey;}';
 owCSS.innerHTML += '#hacerfeedback, #dangerarea, #dangerswitcher, #cssswitcher, #writepadswitcher  {text-decoration: underline; }';
-owCSS.innerHTML += '#alertbox {display: none; font-size: 18pt; position: fixed; top: 80%; left: 0.5em; transition: all 0.66s ease-in-out; background: black; z-index: 200;}';
+owCSS.innerHTML += '#alertbox {font-size: 18pt; position: fixed; top: 80%; left: 0.5em; transition: all 0.66s ease-in-out; background: black; z-index: 200;}';
 htmlHead.appendChild(owCSS);
 
 /* initialize alertNotice */
-var alertNotice = null;
+var alertNotice = '';
 var alertDiv = document.createElement('div');
 alertDiv.id = 'alertbox';
+alertDiv.style.display = 'none';
 htmlBody.appendChild(alertDiv);
 
 
@@ -225,15 +226,14 @@ function imageOnloadHandler() {
 
 function alertshrink() {
   alertNotice = 'The image is shrinked, right click to view the full resolution';
+  var alertDiv = document.getElementById('alertbox');
   alertDiv.innerHTML = alertNotice;
-  alertDiv.display = 'inline';
-alert(alertDiv.display);
-//  window.setTimeout(alertoff, 8000);
+  alertDiv.style.display = 'inline';
+  window.setTimeout(alertoff, 1500);
 }
 
 function alertoff() {
-  alert('off');
-  alertDiv.display = 'none';
+  alertDiv.style.display = 'none';
 }
 
 
