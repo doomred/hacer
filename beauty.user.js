@@ -3,7 +3,7 @@
 // @namespace https://github.com/doomred
 // @description Provide a better HTML architecture for add functions and CSS design. This script is by hacers for hacers.
 // @license ISC
-// @version 0.0.3
+// @version 0.0.4
 // @icon https://raw.github.com/doomred/hacer/master/hacer_icon.png
 // @author doomred
 // @homepageURL http://saltyremix.com
@@ -36,7 +36,7 @@ owCSS.innerHTML += '.rthreads {border-left-size: 15px; border-left-style: solid;
 owCSS.innerHTML += '.posttime {margin-left: 1em;} p, body {margin: 0;} ';
 owCSS.innerHTML += '.nav-bottom {position: fixed; bottom: 1em; right: 0; z-index: 100; font-size: 12pt !important;}';
 owCSS.innerHTML += '.originpost {padding-bottom:6em !important; }';
-owCSS.innerHTML += '#postform_tbl p {line-height: 2em; }';
+owCSS.innerHTML += '#postform_tblabandon p {line-height: 2em; padding-bottom: 2em;}';
 owCSS.innerHTML += '#dangerarea * {padding: 0 1em; background: yellow;}';
 owCSS.innerHTML += '#dangerswitcher, #cssswitcher {padding: 0 0.5em; }';
 owCSS.innerHTML += '#writepad {padding: 1em; background: grey;}';
@@ -507,12 +507,13 @@ document.getElementById('refView').style.display = 'none';
 
 function callResize(objWindow) {
   var frameWinList = objWindow.frames;
-  var frameList = objWindow.getElementsByTagName('iframe');
+  var frameList = objWindow.document.getElementsByTagName('iframe');
   for(var i = 0; i < frameWinList.length; i++) {
     var heightNew = frameWinList[i].document.getElementsByTagName('table')[0].clientHeight + 10; /* 10 is MAGIC */
     var widthNew = frameWinList[i].document.getElementsByTagName('table')[0].clientWidth;
     frameList[i].style.height = heightNew + "px";
     frameList[i].style.width = widthNew + "px";  
+    frameList[i].scrolling = 'no';
   }
 }
 
@@ -539,7 +540,6 @@ for(var i = 0; i < fontBar.length; i++) {
       quoteFrame[i].src = quoteFrameSrc;
       quoteFrame[i].name = 'iframe_' + mainFrameKey;
       quoteFrame[i].onload = frameOnloadHandler; /* use onload Handler, instead of checkonload */
-//    quoteFrame[i].scrolling = 'no';  debug usage
       quoteFrameParent[i] = fontBar[i].parentNode;
       quoteFrameParent[i].replaceChild(quoteFrame[i], fontBar[i]);   
       mainFrameKey += 1;
@@ -562,10 +562,10 @@ function betterquote(targetObj) {  /* betterQuote display */
   for(var i = 0; i < fontBar.length; i++) {
     var tmpColor = fontBar[i].color;
     if(tmpColor.search('789922') !== -1) {  /* replace font with iframe tag */
-      numFrames += 1;
       var tmp = fontBar[i].innerHTML;
       tmp = tmp.substr(tmp.search('No') + 3);
       if(!isNaN(parseInt(tmp))) {  /* abandon on nonsense */
+        numFrames += 1;
         var quoteFrameSrc = 'http://h.acfun.tv/homepage/ref?tid=' + tmp ;
         quoteFrame[i] = document.createElement("iframe");
         quoteFrame[i].src = quoteFrameSrc;
@@ -590,15 +590,15 @@ var quoteSize = 4;
 function frameOnloadHandler(e) {
   var eventSender = (typeof(window.event) != "undefined") ? e.srcElement : e.target;
   var windowCaller = eventSender.contentWindow ? eventSender.contentWindow : eventSender;
-  imageparse(windowCaller);  /* BUG: call top window func */
+  imageparse(windowCaller);
     /* get mainFrameId */
-  var tmp = eventSender.contentWindow;
+  var tmp = windowCaller;
   while(tmp.name === '' || tmp.name.search('iframe') == -1)  tmp = tmp.parent;
-  var recurKey = tmp.name.substr(7);
-  var tmp = mainFrameList[recurKey];
-  mainFrameList.splice(recurKey, 1, tmp + 1);
+  var mainFrameKey = tmp.name.substr(7);
+  var recurKey = mainFrameList[mainFrameKey];
+  mainFrameList.splice(mainFrameKey, 1, recurKey + 1);
 
-  if(mainFrameList[recurKey] < quoteSize) {  /* filter on recursive time */
+  if(mainFrameList[mainFrameKey] < quoteSize) {  /* filter on recursive time */
 //  eventSender.id = 'resizeme';
     if(!betterquote(windowCaller)) {
       styletheframe(windowCaller);
@@ -608,8 +608,19 @@ function frameOnloadHandler(e) {
         callResize(tmpWindow);
         tmpWindow = tmpWindow.parent;
       }
+      callResize(window);
     }
+  } else {
+    styletheframe(windowCaller);
+    tmpWindow = windowCaller.parent;
+    while(window.top !== tmpWindow) {
+      styletheframe(tmpWindow);
+      callResize(tmpWindow);
+      tmpWindow = tmpWindow.parent;
+    }
+    callResize(window);
   }
+
 }
 
 function styletheframe(targetObj) {  /* insert css into iframe */
@@ -626,57 +637,18 @@ function styletheframe(targetObj) {  /* insert css into iframe */
     iframeCSS.innerHTML += 'table {padding: 0; width: 22em;}';
 /* add condition on css switch */
     headFrame.appendChild(iframeCSS);
+    var tdFirst = targetObj.document.getElementsByTagName('td')[0];
+    tdFirst.innerHTML = '';  /* remove the '...' */
     var anchorInFrame = targetObj.document.getElementsByTagName('a');
     for(var i = 0; i < anchorInFrame.length; i++) {  /* fix in_frame link */
       anchorInFrame[i].target = '_top';
     }
-//  styletheframe(targetObj.parent);
   } else {
-    targetObj.document.body.innerHTML = 'QUOTE_ERROR';
+    targetObj.document.body.innerHTML = 'QUOTE_ERROR';  /* EDGE handler */
+    alert('HOLLLY SHIT!! It looks like you have met some boobs not able to handle the quote usage, please either hate them or blame monkeys@h.acfun.tv for not setting just a timeoutID for 40x pages\' nonsense setTimeout() event.');
+    if(confirm('YES: Automatic open current into new tab, i.e: to save yourselves. NO&Cancel: Waiting for the doomsday.')) {
+      window.open(window.location.href, '_blank');
+    }
   }
 }
-
-alert(contentTd[0]);  /* stop the script, sclient fail halt */
-
-  
-function diveintoframes() {
-var frameTag = targetObj.document.getElementsByTagName('iframe');
-//alert(frameTag.length);
-  
-for(var i = 0; i < frameList.length; ++i){
-  var contentTd = frameList[i].document.getElementsByTagName('td');
-//alert(frameList.length);
-  contentTd[0].innerHTML = '';  /* remove the '...' */
-    /* insert css into iframe */
-  var iframeHead = frameList[i].document.getElementsByTagName('head');
-  var iframeCSS = document.createElement('style');
-  iframeCSS.type = 'text/css';
-  iframeCSS.innerHTML += 'html body tbody tr td font[color="#cc1105"],font[color="#117743"] {display: none;}';
-  iframeCSS.innerHTML += 'html body tbody tr td font[color="#789922"] {color: red;}';
-  iframeCSS.innerHTML += '.posttime {display: none;}';
-  iframeCSS.innerHTML += '.report {display: none;}';
-  iframeCSS.innerHTML += '.threadpost {margin: 0 0 0 0;}';
-  iframeCSS.innerHTML += 'img {width: 30%; height: 30%}';
-  iframeCSS.innerHTML += 'table {padding: 0; width: 22em;}';
-  /* add condition on css switch */
-  iframeHead[0].appendChild(iframeCSS);
-  
-  betterquote(frameList[i]);
-    
-  if(frameList[i].frames.length)  {
-    inRecursive = 1;
-    styletheframes(frameList[i]);
-    callResize(frameList[i], frameTag[i], targetObj);
-  } else {
-    callResize(frameList[i], frameTag[i], targetObj); /* the frameTag[i] is a hack equal to frameList[i] but in upper document view */
-    inRecursive = 0;
-    
-
-  }
- // callResize(frameList[i], frameTag[i]);
-
-}
-}
-
-
 
