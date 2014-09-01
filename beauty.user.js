@@ -3,7 +3,7 @@
 // @namespace https://github.com/doomred
 // @description Provide a better HTML architecture for add functions and CSS design. This script is by hacers for hacers.
 // @license ISC
-// @version 0.0.2
+// @version 0.0.2a
 // @icon https://raw.github.com/doomred/hacer/master/hacer_icon.png
 // @author doomred
 // @homepageURL http://saltyremix.com
@@ -41,7 +41,7 @@ owCSS.innerHTML += '#dangerarea * {padding: 0 1em; background: yellow;}';
 owCSS.innerHTML += '#dangerswitcher, #cssswitcher {padding: 0 0.5em; }';
 owCSS.innerHTML += '#writepad {padding: 1em; background: grey;}';
 owCSS.innerHTML += '#hacerfeedback, #dangerarea, #dangerswitcher, #cssswitcher, #writepadswitcher  {text-decoration: underline; }';
-owCSS.innerHTML += '#alertbox {border-color: white; border-size: 5px; border-style: solid; font-size: 18pt; position: fixed; top: 80%; left: 0.5em; transition: all 0.66s ease-in-out; background: black; z-index: 200;}';
+owCSS.innerHTML += '#alertbox {opacity: 0.8; border-color: white; border-size: 5px; border-style: solid; font-size: 18pt; position: fixed; top: 80%; left: 0.5em; transition: all 0.66s ease-in-out; background: black; z-index: 200;}';
 htmlHead.appendChild(owCSS);
 
 /* initialize alertNotice */
@@ -193,9 +193,12 @@ htmlHead.appendChild(hboxStyle);
 function hboxCloseHandler(e) {
   var eventSender = (typeof(window.event) != "undefined") ? e.srcElement : e.target;
 //alert(eventSender.id);
-  if(eventSender.id == 'thebox') {
+  if(eventSender.id == 'thebox' || eventSender.id == 'box-bg') {
     hboxDiv.style.visibility = 'hidden';
     hboxbgDiv.style.visibility = 'hidden';
+    hboxDiv.style.position = '';
+    window.removeEventListener('DOMMouseScroll', disablescroll);
+    window.onmousewheel = document.onmousewheel = null;
     hboxDiv.style.backgroundImage = 'url("data:image/gif;base64,R0lGODlhyAAyAKECAI0gF/z9+v8AAP8AACH/C05FVFNDQVBFMi4wAwEAAAAh/iRDcmVhdGVkIHdpdGggR0lNUCwKYnkgZG9vbXJlZEBnaXRodWIAIfkEBQoAAgAsAAAAAMgAMgAAAv6Mj6nL7Q+jnLTai7PevPsPhuJIluaJpurKtu4Lx/JM1/aN5/rO9/4PDAqHxKLxiEwql8ymUwkAyKIV6YLKwGa0z6yVEg2Lx+MG10BOK8LmL+bcTcAf6TrZu7az5fPAfuvGpDcYiEZYh8d35/Dnd1jY1vWImAfp5aZnKGHneDjRF+dYBVqJkCm6qWZKejC5iFQIZ2k4W8r4xRqpGOH6WtSI2goKfFv7l5vYeboaO0c81Mj1LFy724ZbfUm9TH0FOS0kjV0NbuuN6Zl3zuv8jdxzjA3RK3bNPGi+muq+/vS+3UubPmb2aD0iqC5fEHq+aH1qFy0QuHrK0jlMaA0aQ8+KCNk1K6OpoyKOnUR2w2iSSMRsKUepOvOM0sWZ9+glkcXy5Js7bGDilIIF6MGaAWE1QzkQkFArTCU6C2kQX0uIN/kZTMZhZUZvRDlNdZdzB0SSSDVobSlsK012oYKNJBd2njinxtA11Zmq7TBW5VwmxYsxXtO4bv2hu1ewQ0SFfNYG/QdV0mC67UAIZjyQVN+yTVRVmmtZC1VdxSAXdkJWYGTFj8Hekmv6dNsLhHltopMt9urZvHv7/g08uPDhxIsbP448ufLlzJs7fw49RgEAIfkEBQoAAwAsIgAOAIcAGgAAAv6cjwOQ7Q+jYjLRtmCucXN3fdNCliYpGieqYkqXxl/I0bP8sAhjtz0Ow/V4qyJPdpIcDz/gzDgqgl630K+pmZqiW2cMqxUtVUnqd0sbd6DckmX6zoJ3Zm8tXJnnmPUWvamm1Pemd+eXRZiiFmg1+CfmyFcIcwFmEyiY5uKTCQkYibiZmAeKJ0lHRmok9XmJ5jYadzf5MkdbGhorl0u2sfrouUr0q9spaolLNdlIi2lX6yl6aCo7vejovMtXbOxEQQTqvOTBeeoi1ZbRCFfl9X2UHU/o+6ophFrNdPUMr7xtns9Otj3r2H17NgsYwBrD6nGjhG/eQIS6GCVjt5Div09N5PZQvKapmbJKF4FgmQjtYzKUCseVvLeDWSuNFh9Sm1BOI76DqDrqbDmI5cZzPyP6PMRMJ0uhStQVlaSn462EKW3CfKryZyFLtqamglAAACH5BAUKAAMALK8AIgAMAAMAAAIJhIdpC6nc3FgFACH5BAUKAAMALMEAIgADAAMAAAIDhH8FADs=")';  /* revoke the loading gif */
   }
 }
@@ -211,21 +214,50 @@ function imageOnloadHandler() {
   var widthPic = idImageinbox.clientWidth;
   var heightWindow = window.innerHeight ? window.innerHeight : document.documentElement.offsetHeight;
   var widthWindow = window.innerWidth ? window.innerWidth : document.documentElement.offsetWidth;
-  if(heightPic > heightWindow) {
-    alertshrink();
+  if(heightPic > heightWindow && (widthPic / heightPic) < 0.8) {  /* over 8:10, make scrollable */
+    idImageinbox.width = widthWindow -40;
+    var idThebox = document.getElementById('thebox');
+    var idBoxBg= document.getElementById('box-bg');
+    idThebox.style.left = '20px';
+    idThebox.style.top = 0;
+    idThebox.style.position = 'fixed';
+    idBoxBg.addEventListener('DOMMouseScroll', scrollimage);
+      /* disable window scroll event */
+    window.addEventListener('DOMMouseScroll', disablescroll);
+    window.onmousewheel = document.onmousewheel = disablescroll;
+    alertNotion('Use Mouse Wheel to ajust');
+  } else if(heightPic > heightWindow) {
+    alertNotion('The image is shrinked, right click to view the full resolution');
     idImageinbox.height = heightWindow - 40;
-  } else {
-    if(widthPic > widthWindow) {
-      alertshrink();
+  } else if(widthPic > widthWindow) {
+      alertNotion('The image is shrinked, right click to view the full resolution');
       idImageinbox.width = widthWindow - 40;
-    }
   }
   hboxDiv.style.backgroundImage = '';  /* remove the loading gif */
 }
 
+function disablescroll(e) {
+  e.preventDefault();
+  e.returnValue = false;
+}
 
-function alertshrink() {
-  alertNotice = 'The image is shrinked, right click to view the full resolution';
+function scrollimage(e) {
+  if(!e && window.event)  var e = window.event;
+  if(e.wheelDelta) {
+    var delta = e.wheelDelta / 30;
+  } else {
+    var delta = -e.detail * 10;
+  }
+  var idThebox = document.getElementById('thebox');
+  var heightWindow = window.innerHeight ? window.innerHeight : document.documentElement.offsetHeight;
+  var heightPic = idThebox.clientHeight;
+  var topThebox = parseInt(idThebox.style.top.slice(0, -2));
+    topThebox += delta;
+    idThebox.style.top = topThebox + 'px';
+}
+  
+
+function alertNotion(alertNotice) {
   var alertDiv = document.getElementById('alertbox');
   alertDiv.innerHTML = alertNotice;
   alertDiv.style.display = 'inline';
@@ -244,7 +276,7 @@ function hboxLauncher(e) {
   var imageSource = eventSender.rel;
   var hboxDiv = document.getElementById('thebox');
   var hboxbgDiv = document.getElementById('box-bg');
-  hboxbgDiv.addEventListener('click',hboxCloseHandler);
+  hboxbgDiv.addEventListener('click', hboxCloseHandler);
   hboxDiv.style.visibility='visible';
   hboxbgDiv.style.visibility = 'visible';
   var hboxImg = document.createElement("img");
