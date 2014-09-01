@@ -3,7 +3,7 @@
 // @namespace https://github.com/doomred
 // @description Provide a better HTML architecture for add functions and CSS design. This script is by hacers for hacers.
 // @license ISC
-// @version 0.0.1
+// @version 0.0.2
 // @icon https://raw.github.com/doomred/hacer/master/hacer_icon.png
 // @author doomred
 // @homepageURL http://saltyremix.com
@@ -36,12 +36,12 @@ owCSS.innerHTML += '.rthreads {border-left-size: 15px; border-left-style: solid;
 owCSS.innerHTML += '.posttime {margin-left: 1em;} p, body {margin: 0;} ';
 owCSS.innerHTML += '.nav-bottom {position: fixed; bottom: 1em; right: 0; z-index: 100; font-size: 12pt !important;}';
 owCSS.innerHTML += '.originpost {padding-bottom:6em !important; }';
-owCSS.innerHTML += '#postform_tbl p {line-height: 1.5em; }';
+owCSS.innerHTML += '#postform_tbl p {line-height: 2em; }';
 owCSS.innerHTML += '#dangerarea * {padding: 0 1em; background: yellow;}';
 owCSS.innerHTML += '#dangerswitcher, #cssswitcher {padding: 0 0.5em; }';
 owCSS.innerHTML += '#writepad {padding: 1em; background: grey;}';
 owCSS.innerHTML += '#hacerfeedback, #dangerarea, #dangerswitcher, #cssswitcher, #writepadswitcher  {text-decoration: underline; }';
-owCSS.innerHTML += '#alertbox {font-size: 18pt; position: fixed; top: 80%; left: 0.5em; transition: all 0.66s ease-in-out; background: black; z-index: 200;}';
+owCSS.innerHTML += '#alertbox {border-color: white; border-size: 5px; border-style: solid; font-size: 18pt; position: fixed; top: 80%; left: 0.5em; transition: all 0.66s ease-in-out; background: black; z-index: 200;}';
 htmlHead.appendChild(owCSS);
 
 /* initialize alertNotice */
@@ -240,7 +240,7 @@ function alertoff() {
 
 function hboxLauncher(e) {
   var eventSender = (typeof(window.event) != "undefined") ? e.srcElement : e.target;
-  var eventSender = eventSender.parentNode; /* cant click empty anchor */
+  eventSender = eventSender.parentNode; /* cant click empty anchor */
   var imageSource = eventSender.rel;
   var hboxDiv = document.getElementById('thebox');
   var hboxbgDiv = document.getElementById('box-bg');
@@ -263,7 +263,7 @@ for(var k = 0; k < classThreadfly.length; k++) {
     if(imgThread.length) {
         /* fix the origin anchor */
       anchorThread[i].rel = anchorThread[i].href;
-      anchorThread[i].addEventListener('click',hboxLauncher);
+      anchorThread[i].addEventListener('click', hboxLauncher);
       anchorThread[i].target = '';
       anchorThread[i].href = 'javascript:void(0);';  /* dirty hack, use span instead */
     }
@@ -277,7 +277,7 @@ function imageparse(targetObj) {  /* make anchor useless and parse image */
     if(imgThread.length) {
         /* fix the origin anchor */
       anchorThread[i].rel = anchorThread[i].href;
-      anchorThread[i].addEventListener('click',hboxLauncher);
+      anchorThread[i].addEventListener('click', hboxLauncher);
       anchorThread[i].target = '';
       anchorThread[i].href = 'javascript:void(0);';  /* dirty hack, use span instead */
     }
@@ -455,9 +455,9 @@ function adminSwitchHandler() {
   }
 }
 
-/* remove useless refView divbox */
+/* remove useless refView divbox 
 document.getElementById('refView').style.display = 'none';
-
+ */
 
 function callResize(objWindow) {
   var heightNew = objWindow.document.getElementsByTagName('table')[0].clientHeight + 10; /* the num is MAGIC */
@@ -478,10 +478,8 @@ function pausecomp(millis) { /* busy sleep, debug usage _only_ */
   while(curDate-date < millis);
 }
 
-//  var recurKey = 0;
-//  var mainFrameKey = 0;
-
-/* betterquote window */
+  /* betterquote window */
+var mainFrameKey = 0;
 var fontBar = window.document.getElementsByTagName("font");
 var quoteFrame = [];
 var quoteFrameParent = [];
@@ -494,39 +492,39 @@ for(var i = 0; i < fontBar.length; i++) {
       /* replase tag <font> with tag <iframe> */
     quoteFrame[i] = document.createElement("iframe");
     quoteFrame[i].src = quoteFrameSrc;
-//      quoteFrame[i].id = 'iframe_' + mainFrameKey;
+//    quoteFrame[i].id = 'iframe_' + mainFrameKey;
+    quoteFrame[i].name = 'iframe_' + mainFrameKey;
     quoteFrame[i].onload = frameOnloadHandler; /* instead of checkonload */
 //      quoteFrame[i].scrolling = 'no';  debug usage
     quoteFrameParent[i] = fontBar[i].parentNode;
     quoteFrameParent[i].replaceChild(quoteFrame[i], fontBar[i]);   
-//      mainFrameKey += 1;
+    mainFrameKey += 1;
   }
 }
+var mainFrameList = [];
+do {
+  mainFrameList.push(0);
+} while(mainFrameKey--);
 
 
 function betterquote(targetObj) {  /* betterQuote display */
   var fontBar = targetObj.document.getElementsByTagName("font");
-//alert(fontBar[0]);
-//alert(targetObj);
   var quoteFrame = [];
   var quoteFrameParent = [];
   var numFrames = 0;
   for(var i = 0; i < fontBar.length; i++) {
     var tmpColor = fontBar[i].color;
-    if(tmpColor.search('789922') !== -1) {
+    if(tmpColor.search('789922') !== -1) {  /* replace font with iframe tag */
       numFrames += 1;
       var tmp = fontBar[i].innerHTML;
       tmp = tmp.substr(tmp.search('No') + 3);
       var quoteFrameSrc = 'http://h.acfun.tv/homepage/ref?tid=' + tmp ;
-        /* replase tag <font> with tag <iframe> */
       quoteFrame[i] = document.createElement("iframe");
       quoteFrame[i].src = quoteFrameSrc;
-//      quoteFrame[i].id = 'iframe_' + mainFrameKey;
       quoteFrame[i].onload = frameOnloadHandler; /* use onload Handler, instead of checkonload */
 //      quoteFrame[i].scrolling = 'no';  debug usage
       quoteFrameParent[i] = fontBar[i].parentNode;
       quoteFrameParent[i].replaceChild(quoteFrame[i], fontBar[i]);   
-//      mainFrameKey += 1;
     }
   }
   if(numFrames) {
@@ -537,43 +535,54 @@ function betterquote(targetObj) {  /* betterQuote display */
 }
 
 
-//  var mainFrameList = new Array(mainFrameKey);
-
+var quoteSize = 4;
 function frameOnloadHandler(e) {
-  /* should add browser comptiable, replace e.target */
   var eventSender = (typeof(window.event) != "undefined") ? e.srcElement : e.target;
   var windowCaller = eventSender.contentWindow ? eventSender.contentWindow : eventSender;
-  eventSender.id = 'resizeme';
-  imageparse(eventSender.contentWindow);
-//alert(eventSender.id);
-  if(!betterquote(windowCaller)) {
-    styletheframe(windowCaller);
-    callResize(eventSender.contentWindow.parent);  /* BUG: call top parent's function */
+  imageparse(windowCaller);  /* BUG: call top window func */
+    /* get mainFrameId */
+  var tmp = eventSender.contentWindow;
+  while(tmp.name === '' || tmp.name.search('iframe') == -1)  tmp = tmp.parent;
+  var recurKey = tmp.name.substr(7);
+  var tmp = mainFrameList[recurKey];
+  mainFrameList.splice(recurKey, 1, tmp + 1);
 
+    /* filter on recursive time */
+  if(mainFrameList[recurKey] < quoteSize) {
+//    eventSender.id = 'resizeme';
+    if(!betterquote(windowCaller)) {
+      styletheframe(windowCaller);
+//      callResize(eventSender.contentWindow.parent);
+
+    }
   }
 }
 
 function styletheframe(targetObj) {  /* insert css into iframe */
-  if(targetObj.top !== targetObj.parent) {
+  if(!targetObj.document.getElementsByClassName('fivehundred').length) {  /* handle 40x page */
+    if(targetObj.top !== targetObj.parent) {
 
-//  var frameList = targetObj.frames;
-  var headFrame = targetObj.document.getElementsByTagName('head')[0];
-  var iframeCSS = document.createElement('style');
-  iframeCSS.type = 'text/css';
-  iframeCSS.innerHTML += 'html body tbody tr td font[color="#cc1105"],font[color="#117743"] {display: none;}';
-  iframeCSS.innerHTML += 'html body tbody tr td font[color="#789922"] {color: red;}';
-  iframeCSS.innerHTML += '.posttime {display: none;}';
-  iframeCSS.innerHTML += '.report {display: none;}';
-  iframeCSS.innerHTML += '.threadpost {margin: 0 0 0 0;}';
-  iframeCSS.innerHTML += 'img {width: 30%; height: 30%}';
-  iframeCSS.innerHTML += 'table {padding: 0; width: 22em;}';
-  /* add condition on css switch */
-  headFrame.appendChild(iframeCSS);
-  var anchorInFrame = targetObj.document.getElementsByTagName('a');
-  for(var i = 0; i < anchorInFrame.length; i++) {  /* fix in_frame link */
-    anchorInFrame[i].target = '_blank';
-  }
-  styletheframe(targetObj.parent);
+//    var frameList = targetObj.frames;
+    var headFrame = targetObj.document.getElementsByTagName('head')[0];
+    var iframeCSS = document.createElement('style');
+    iframeCSS.type = 'text/css';
+    iframeCSS.innerHTML += 'html body tbody tr td font[color="#cc1105"],font[color="#117743"] {display: none;}';
+    iframeCSS.innerHTML += 'html body tbody tr td font[color="#789922"] {color: red;}';
+    iframeCSS.innerHTML += '.posttime {display: none;}';
+    iframeCSS.innerHTML += '.report {display: none;}';
+    iframeCSS.innerHTML += '.threadpost {margin: 0 0 0 0;}';
+    iframeCSS.innerHTML += 'img {width: 30%; height: 30%}';
+    iframeCSS.innerHTML += 'table {padding: 0; width: 22em;}';
+      /* add condition on css switch */
+    headFrame.appendChild(iframeCSS);
+    var anchorInFrame = targetObj.document.getElementsByTagName('a');
+    for(var i = 0; i < anchorInFrame.length; i++) {  /* fix in_frame link */
+      anchorInFrame[i].target = '_top';
+    }
+    styletheframe(targetObj.parent);
+    }
+  } else {
+    targetObj.document.body.innerHTML = 'QUOTE_ERROR';
   }
 }
 
