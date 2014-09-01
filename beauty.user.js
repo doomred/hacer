@@ -506,15 +506,14 @@ document.getElementById('refView').style.display = 'none';
  */
 
 function callResize(objWindow) {
-  var heightNew = objWindow.document.getElementsByTagName('table')[0].clientHeight + 10; /* the num is MAGIC */
-  var widthNew = objWindow.document.getElementsByTagName('table')[0].clientWidth;
-//alert('chekc id: resizeme');
-//alert('stop');
-  var idResizeme = objWindow.document.getElementById('resizeme');
-//alert('the_same' + idResizeme);
-  idResizeme.style.height = heightNew + "px";
-  idResizeme.style.width = widthNew + "px";  
-//  idResizeme.id = '';
+  var frameWinList = objWindow.frames;
+  var frameList = objWindow.getElementsByTagName('iframe');
+  for(var i = 0; i < frameWinList.length; i++) {
+    var heightNew = frameWinList[i].document.getElementsByTagName('table')[0].clientHeight + 10; /* 10 is MAGIC */
+    var widthNew = frameWinList[i].document.getElementsByTagName('table')[0].clientWidth;
+    frameList[i].style.height = heightNew + "px";
+    frameList[i].style.width = widthNew + "px";  
+  }
 }
 
 function pausecomp(millis) { /* busy sleep, debug usage _only_ */
@@ -531,20 +530,22 @@ var quoteFrame = [];
 var quoteFrameParent = [];
 for(var i = 0; i < fontBar.length; i++) {
   var tmpColor = fontBar[i].color;
-  if(tmpColor.search('789922') !== -1) {
+  if(tmpColor.search('789922') !== -1) {  /* replace font with iframe tag */
     var tmp = fontBar[i].innerHTML;
     tmp = tmp.substr(tmp.search('No') + 3);
-    var quoteFrameSrc = 'http://h.acfun.tv/homepage/ref?tid=' + tmp ;
-      /* replase tag <font> with tag <iframe> */
-    quoteFrame[i] = document.createElement("iframe");
-    quoteFrame[i].src = quoteFrameSrc;
-//    quoteFrame[i].id = 'iframe_' + mainFrameKey;
-    quoteFrame[i].name = 'iframe_' + mainFrameKey;
-    quoteFrame[i].onload = frameOnloadHandler; /* instead of checkonload */
-//      quoteFrame[i].scrolling = 'no';  debug usage
-    quoteFrameParent[i] = fontBar[i].parentNode;
-    quoteFrameParent[i].replaceChild(quoteFrame[i], fontBar[i]);   
-    mainFrameKey += 1;
+    if(!isNaN(parseInt(tmp))) {  /* abandon on nonsense */
+      var quoteFrameSrc = 'http://h.acfun.tv/homepage/ref?tid=' + tmp ;
+      quoteFrame[i] = document.createElement("iframe");
+      quoteFrame[i].src = quoteFrameSrc;
+      quoteFrame[i].name = 'iframe_' + mainFrameKey;
+      quoteFrame[i].onload = frameOnloadHandler; /* use onload Handler, instead of checkonload */
+//    quoteFrame[i].scrolling = 'no';  debug usage
+      quoteFrameParent[i] = fontBar[i].parentNode;
+      quoteFrameParent[i].replaceChild(quoteFrame[i], fontBar[i]);   
+      mainFrameKey += 1;
+    } else {
+      fontBar[i].color = 'blue';  /* recolor the nonsense */
+    }
   }
 }
 var mainFrameList = [];
@@ -564,13 +565,17 @@ function betterquote(targetObj) {  /* betterQuote display */
       numFrames += 1;
       var tmp = fontBar[i].innerHTML;
       tmp = tmp.substr(tmp.search('No') + 3);
-      var quoteFrameSrc = 'http://h.acfun.tv/homepage/ref?tid=' + tmp ;
-      quoteFrame[i] = document.createElement("iframe");
-      quoteFrame[i].src = quoteFrameSrc;
-      quoteFrame[i].onload = frameOnloadHandler; /* use onload Handler, instead of checkonload */
+      if(!isNaN(parseInt(tmp))) {  /* abandon on nonsense */
+        var quoteFrameSrc = 'http://h.acfun.tv/homepage/ref?tid=' + tmp ;
+        quoteFrame[i] = document.createElement("iframe");
+        quoteFrame[i].src = quoteFrameSrc;
+        quoteFrame[i].onload = frameOnloadHandler; /* use onload Handler, instead of checkonload */
 //      quoteFrame[i].scrolling = 'no';  debug usage
-      quoteFrameParent[i] = fontBar[i].parentNode;
-      quoteFrameParent[i].replaceChild(quoteFrame[i], fontBar[i]);   
+        quoteFrameParent[i] = fontBar[i].parentNode;
+        quoteFrameParent[i].replaceChild(quoteFrame[i], fontBar[i]);   
+      } else {
+        fontBar[i].color = 'blue';  /* recolor the nonsense */
+      }
     }
   }
   if(numFrames) {
@@ -593,22 +598,22 @@ function frameOnloadHandler(e) {
   var tmp = mainFrameList[recurKey];
   mainFrameList.splice(recurKey, 1, tmp + 1);
 
-    /* filter on recursive time */
-  if(mainFrameList[recurKey] < quoteSize) {
-//    eventSender.id = 'resizeme';
+  if(mainFrameList[recurKey] < quoteSize) {  /* filter on recursive time */
+//  eventSender.id = 'resizeme';
     if(!betterquote(windowCaller)) {
       styletheframe(windowCaller);
-//      callResize(eventSender.contentWindow.parent);
-
+      tmpWindow = windowCaller.parent;
+      while(window.top !== tmpWindow) {
+        styletheframe(tmpWindow);
+        callResize(tmpWindow);
+        tmpWindow = tmpWindow.parent;
+      }
     }
   }
 }
 
 function styletheframe(targetObj) {  /* insert css into iframe */
   if(!targetObj.document.getElementsByClassName('fivehundred').length) {  /* handle 40x page */
-    if(targetObj.top !== targetObj.parent) {
-
-//    var frameList = targetObj.frames;
     var headFrame = targetObj.document.getElementsByTagName('head')[0];
     var iframeCSS = document.createElement('style');
     iframeCSS.type = 'text/css';
@@ -619,14 +624,13 @@ function styletheframe(targetObj) {  /* insert css into iframe */
     iframeCSS.innerHTML += '.threadpost {margin: 0 0 0 0;}';
     iframeCSS.innerHTML += 'img {width: 30%; height: 30%}';
     iframeCSS.innerHTML += 'table {padding: 0; width: 22em;}';
-      /* add condition on css switch */
+/* add condition on css switch */
     headFrame.appendChild(iframeCSS);
     var anchorInFrame = targetObj.document.getElementsByTagName('a');
     for(var i = 0; i < anchorInFrame.length; i++) {  /* fix in_frame link */
       anchorInFrame[i].target = '_top';
     }
-    styletheframe(targetObj.parent);
-    }
+//  styletheframe(targetObj.parent);
   } else {
     targetObj.document.body.innerHTML = 'QUOTE_ERROR';
   }
