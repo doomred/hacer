@@ -3,7 +3,7 @@
 // @namespace https://github.com/doomred
 // @description Provide a better HTML architecture for add functions and CSS design. This script is by hacers for hacers.
 // @license ISC
-// @version 0.0.2a
+// @version 0.0.3
 // @icon https://raw.github.com/doomred/hacer/master/hacer_icon.png
 // @author doomred
 // @homepageURL http://saltyremix.com
@@ -42,9 +42,10 @@ owCSS.innerHTML += '#dangerswitcher, #cssswitcher {padding: 0 0.5em; }';
 owCSS.innerHTML += '#writepad {padding: 1em; background: grey;}';
 owCSS.innerHTML += '#hacerfeedback, #dangerarea, #dangerswitcher, #cssswitcher, #writepadswitcher  {text-decoration: underline; }';
 owCSS.innerHTML += '#alertbox {opacity: 0.8; border-color: white; border-size: 5px; border-style: solid; font-size: 18pt; position: fixed; top: 80%; left: 0.5em; transition: all 0.66s ease-in-out; background: black; z-index: 200;}';
+owCSS.innerHTML += '#menu {left: -125px; opacity: 0; transition: all 0.66s ease-in-out; padding: 0 0 0 1em; overflow: hidden; height: 100%}';
 htmlHead.appendChild(owCSS);
 
-/* initialize alertNotice */
+  /* initialize alertNotice */
 var alertNotice = '';
 var alertDiv = document.createElement('div');
 alertDiv.id = 'alertbox';
@@ -52,27 +53,40 @@ alertDiv.style.display = 'none';
 htmlBody.appendChild(alertDiv);
 
 
-  /* hidden the menu by default */
+  /* initialize the menu */
+var idRightContent = document.getElementById('right_content');
+idRightContent.style.margin = 0;  /* fix right_content */
 var idMenu = document.getElementById("menu");
-idMenu.style.left = '-125px';
-idMenu.style.height = '98%'; // dirty hack
-idMenu.style.opacity = 0;
-idMenu.style.transition = 'all 0.66s ease-in-out';
-idMenu.style.padding = '0 2em 0 2em';
+idMenu.style.margin = idMenu.style.padding = idMenu.style.overflow = '';  /* overwrite dynamic style */
+idMenu.style.left = '-125px';  /* overwrite dynamic style */
+var menuBlock = document.createElement('span');  /* dirty hack, depend on dynamic generate height */
+menuBlock.innerHTML = '<br />';
+idMenu.appendChild(menuBlock);
 idMenu.onmouseover = function() {
+  window.addEventListener('DOMMouseScroll', disablescroll);
+  window.onmousewheel = document.onmousewheel = disablescroll;
+  idMenu.addEventListener('DOMMouseScroll', scrollmenu);
   idMenu.style.left = '0px';
   idMenu.style.opacity = 1;
 };
 idMenu.onmouseout = function() {
+  window.removeEventListener('DOMMouseScroll', disablescroll);
+  window.onmousewheel = document.onmousewheel = null;
   idMenu.style.left = '-125px';
   idMenu.style.opacity = 0;
 };
 
 
-  /* fix margin after hidden idMenu */
-var idRightcontent = document.getElementById("right_content");
-idRightcontent.style.margin = '0';
-
+function scrollmenu(e) {
+  if(!e && window.event)  var e = window.event;
+  if(e.wheelDelta) {
+    var delta = e.wheelDelta / 30;
+  } else {
+    var delta = -e.detail * 10;
+  }
+  var idMenu = document.getElementById('menu');
+  idMenu.scrollTop -= delta;
+}
 
 function switchadmin(keycode) {  /* enable hidden adminTools */
   var classAdminTool = document.getElementsByClassName("adminTool");
