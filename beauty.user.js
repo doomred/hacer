@@ -35,7 +35,7 @@
 var i = 0, k = 0;
 
   /* init variable Handler */
-var hacerVersion = '0.0.6';
+var hacerVersion = '0.0.7';
 var quoteSize = GM_getValue('gm_quotesize', 4);
 var twoupOn = GM_getValue('gm_twoupon', 1);
 var menuHide = GM_getValue('gm_menuhide', 1);
