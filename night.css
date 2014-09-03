@@ -64,14 +64,13 @@ a:hover{
   opacity:0.3;
   transition:all .3s ease-in-out;
 }
+
 #right_content img:hover{
   opacity:0.9;
 }
 
-
 #menu{
   background:rgb(12,12,30) !important;
-  // font-size:14px !important;
 }
 
 .toolbar-bottom {
