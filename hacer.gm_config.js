@@ -1,28 +1,30 @@
-/*
-Copyright 2009-2013, GM_config Contributors
-All rights reserved.
+/*****************************
+ * Origin License: LGPL
+ * Origin Copyright info: Copyright 2009-2013, GM_config Contributors
+ * GM_config Contributors: Mike Medley <medleymind@gmail.com>, Joe Simmons, Izzy Soft, Marti Martz
+ *
+ * LICENSE: LGPL
+ * LICENSE NOTICE:
+ *  GM_config is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Discreption: Customize for hacer, just work & easy to use.
+ * Edit & Optimize By:
+ *             dye E. jarhoo(github.com/doomred),
+ * Many Thanks To:
+ *             zjworks,
+\*******************************************************/
 
-GM_config Contributors:
-    Mike Medley <medleymind@gmail.com>
-    Joe Simmons
-    Izzy Soft
-    Marti Martz
-
-GM_config is distributed under the terms of the GNU Lesser General Public License.
-
-    GM_config is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
 
 // The GM_config constructor
 function GM_configStruct() {

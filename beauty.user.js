@@ -2,10 +2,10 @@
 // @name hacer-dev
 // @namespace https://github.com/doomred
 // @description Provide a better HTML architecture for add functions and CSS design. This script is by hacers for hacers.
-// @version 0.0.7a
+// @version 0.0.8
 // @encoding utf-8
 // @license ISC
-// @copyright dye `Eric' jarhoo
+// @copyright hacer contributors
 // @author dye `Eric' jarhoo
 // @homepageURL http://saltyremix.com
 // @icon https://raw.github.com/doomred/hacer/master/hacer_icon.png
@@ -39,7 +39,7 @@
 var i = 0, k = 0;
 
 /* init variable Handler */
-var hacerVersion = '0.0.7a';
+var hacerVersion = '0.0.8';
 
 
 var hboxCSS, nightCSS, frameNightCSS, frameDayCSS;
