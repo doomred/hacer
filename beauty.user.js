@@ -2,15 +2,20 @@
 // @name hacer
 // @namespace https://github.com/doomred
 // @description Provide a better HTML architecture for add functions and CSS design. This script is by hacers for hacers.
-// @version 0.0.7
-// @license ISC
-// @copyleft dye E. jarhoo
-// @icon https://raw.github.com/doomred/hacer/master/hacer_icon.png
-// @updateURL https://raw.github.com/doomred/hacer/master/hacer.meta.js
-// @resource mburl https://raw.github.com/doomred/hacer/master/hacer.meta.js
+// @version 0.0.7a
 // @encoding utf-8
-// @author dye E. jarhoo
+// @license ISC
+// @copyright dye `Eric' jarhoo
+// @author dye `Eric' jarhoo
 // @homepageURL http://saltyremix.com
+// @icon https://raw.github.com/doomred/hacer/master/hacer_icon.png
+// @updateURL https://raw.github.com/doomred/hacer/devvel/hacer.meta.js
+// @require https://raw.github.com/doomred/hacer/devvel/hacer.gm_config.js
+// @resource mburl https://raw.github.com/doomred/hacer/devvel/hacer.meta.js
+// @resource hboxCSS https://raw.github.com/doomred/hacer/devvel/hacer.meta.js
+// @resource framenightcss https://raw.github.com/doomred/hacer/devvel/framenight.css
+// @resource framedaycss https://raw.github.com/doomred/hacer/devvel/frameday.css
+// @resource nightcss https://raw.github.com/doomred/hacer/devvel/night.css
 // @include http://h.acfun.tv/*
 // @exclude http://h.acfun.tv/homepage/ref*
 // @run-at document-end
@@ -31,31 +36,17 @@
 
 
 
+  /* init variable Handler */
+var hacerVersion = '0.0.7a';
+
   /* init foo bar variable */
 var i = 0, k = 0;
 
-  /* init variable Handler */
-var hacerVersion = '0.0.6';
-var quoteSize = GM_getValue('gm_quotesize', 4);
-var twoupOn = GM_getValue('gm_twoupon', 1);
-var menuHide = GM_getValue('gm_menuhide', 1);
-var hboxOn = GM_getValue('gm_hboxon', 1);
-var wpOn = GM_getValue('gm_wpon', 1);
-var adminOn = GM_getValue('gm_adminon', 0);
-var altCSS = GM_getValue('gm_altcss', '');
-var twOn = GM_getValue('gm_twon', 1);
-var navFix = GM_getValue('gm_navgix', 1);
-var bqOn = GM_getValue('gm_bqon', 1);
-
 var hboxCSS, nightCSS, frameNightCSS, frameDayCSS;
-  /* last modified: 0.0.6 */
-frameNightCSS = ' html body tbody tr td font[color="#cc1105"],font[color="#117743"] {display: none;}html body tbody tr td font[color="#789922"] {color: red;}.posttime {display: none;}.report {display: none;}.threadpost {margin: 0;}img {width: 30%;height: 30%;}table {padding: 0;width: 18em;}body{margin: 0;background-color: black;color:rgb(198,198,198) !important;}td{z-index: -50;background:rgba(50,50,60,0.7) !important;padding:9px !important;transition:background .1s ease-in-out;}td:hover {background:rgb(50,50,60) !important;}td:active {background:rgb(50,50,100) !important;}a{transition:color .1s ease-in-out;}a:link{color:rgb(100,100,224) !important}a:visited{color:rgb(100,100,190) !important}a:hover{color:lightblue !important}img{z-index: 50;opacity:0.3;transition:all .3s ease-in-out;}img:hover{opacity:0.9;}';
-  /* last modified: 0.0.6 */
-frameDayCSS = ' html body tbody tr td font[color="#cc1105"],font[color="#117743"] {display: none;}html body tbody tr td font[color="#789922"] {color: red;}.posttime {display: none;}.report {display: none;}.threadpost {margin: 0;}img {width: 30%;height: 30%;}table {padding: 0;width: 18em;}';
-  /* last modified: 0.0.6 */
-nightCSS = 'body{background-color:black;background-image:url("http://avdot.net/cover.php");background-position: center;background-repeat: no-repeat;background-attachment: fixed;background-repeat: no-repeat;color:rgb(198,198,198) !important;transition:background .5s ease-in-out;}#right_content{// background:black !important;background-image: linear-gradient(rgba(0,0,0,0.8),rgba(0,0,0,0.5), rgba(0,0,0,0.9)) !important;background-attachment: fixed;transition:background .5s ease-in-out;}td{z-index: -50;background:rgba(50,50,60,0.7) !important;border: solid 0;border-radius: 1em;padding:9px !important;transition:background .1s ease-in-out;}td:hover, .originpost {background:rgb(50,50,60) !important;// padding: 6em !important;}td:active {background:rgb(50,50,100) !important;}a{transition:color .1s ease-in-out;}a:link{color:rgb(100,100,224) !important}a:visited{color:rgb(100,100,190) !important}a:hover{color:lightblue !important}#right_content img{z-index: 50;opacity:0.3;transition:all .3s ease-in-out;}#right_content img:hover{opacity:0.9;}#menu{background:rgb(12,12,30) !important;// font-size:14px !important;}.toolbar-bottom {color:#ffffff !important;background-image: url("data:image/png;base64,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");transition:background .1s ease-in-out;}#postform_tbl input, #emotion, textarea {background-color:black !important;color:rgb(150,150,150) !important;}font[color="#707070"]{color:rgb(100,100,100);}';
-  /* need some explain on version of CSS */
-hboxCSS = '#thebox {display: table-cell;vertical-align: middle;background-position: center;background-repeat: no-repeat;filter: Alpha(Opacity=100);visibility: hidden;z-index: 120;margin-left: auto;margin-right: auto;}#box-bg {position: fixed;display: table;z-index: 110;top: 0;left: 0;text-align: center;width: 100% !important;height: 100% !important;background-color: rgba(0, 0, 0, 0.8);visibility: hidden;transition: all 0.5s ease-in-out;}';
+frameNightCSS = GM_getResourceText('framenightcss');
+frameDayCSS = GM_getResourceText('framedaycss');
+nightCSS = GM_getResourceText('nightcss');
+hboxCSS = GM_getResourceText('hboxcss');
 
   /* overwrite bad CSS plus must have CSS, custom style goto altCSS */
 var htmlHead, htmlBody, owCSS;
@@ -63,20 +54,14 @@ htmlHead = window.document.getElementsByTagName("head")[0];
 htmlBody = window.document.getElementsByTagName("body")[0];
 owCSS = window.document.createElement("style");
 owCSS.type = 'text/css';
+owCSS.id= 'overwritecss';
 owCSS.innerHTML += 'body {min-width: 50em; overflow-x: hidden;}';
-owCSS.innerHTML += '.threadfly {width: 45%; float: left; margin-left: 1%; margin-bottom: 2em;}';
-owCSS.innerHTML += '.threadfly table font {display: none;}';
-owCSS.innerHTML += '.rthreads {border-left-width: 15px; border-left-style: solid; padding: 0 0 0 2%; margin: 0 0 2em 2%;}';
-owCSS.innerHTML += '.posttime {margin-left: 0.5em;} p, body {margin: 0;} ';
 owCSS.innerHTML += '.nav-bottom {position: fixed; bottom: 1em; right: 0; z-index: 100; font-size: 12pt !important;}';
 owCSS.innerHTML += '.originpost {padding-bottom:6em !important; }';
-owCSS.innerHTML += '#postform_tblabandon p {line-height: 2em; padding-bottom: 2em;}';
-owCSS.innerHTML += '#dangerarea * {padding: 0 1em; background: yellow;}';
-owCSS.innerHTML += '#dangerswitcher, #cssswitcher {padding: 0 0.5em; }';
-owCSS.innerHTML += '#writepad {padding: 1em; background: grey;}';
-owCSS.innerHTML += '#hacerfeedback, #dangerarea, #dangerswitcher, #cssswitcher, #writepadswitcher  {text-decoration: underline; }';
+owCSS.innerHTML += '#hacerfeedback, #dangerarea, #dangerswitcher, #cssswitcher, #writepadswitcher, #settingswitcher  {text-decoration: underline; margin: 0 0.5em;}';
+owCSS.innerHTML += '#hacerfeedback:hover, #dangerarea:hover, #dangerswitcher:hover, #cssswitcher:hover, #writepadswitcher:hover, #settingswitcher:hover  {color: #810400; cursor: pointer; text-decoration: underline; margin: 0 0.5em;}';
 owCSS.innerHTML += '#alertbox {opacity: 0.9; border-color: white; border-width: 5px; border-style: solid; font-size: 18pt; position: fixed; top: 80%; left: 0.5em; transition: all 0.66s ease-in-out; background: black; z-index: 200;}';
-owCSS.innerHTML += '#menu {left: -125px; opacity: 0; transition: all 0.66s ease-in-out; padding: 0 0 0 1em; overflow: hidden; height: 100%}';
+owCSS.innerHTML += '#alertbox {opacity: 0.9; border-color: white; border-width: 5px; border-style: solid; font-size: 18pt; position: fixed; top: 80%; left: 0.5em; transition: all 0.66s ease-in-out; background: black; z-index: 200;}';
 htmlHead.appendChild(owCSS);
 
   /* init global alertNotice function */
@@ -90,11 +75,11 @@ function alertoff() {
   alertDiv.style.display = 'none';
 }
 
-function alertNotice(alertContent) {
+function alertNotice(alertContent, delay) {
   var alertDiv = document.getElementById('alertbox');
   alertDiv.innerHTML = alertContent;
   alertDiv.style.display = 'inline';
-  window.setTimeout(alertoff, 1500);
+  window.setTimeout(alertoff, delay);
 }
 
 function forceupdate() {
@@ -105,10 +90,10 @@ function forceupdate() {
 function checkupdate() {
   var updateMB = GM_getResourceText('mburl');
   if(updateMB.search(hacerVersion) === -1) {
-    alertNotice('New version Found, please wait to install.');
+    alertNotice('New version Found, please wait awhile to install.', 3000);
     GM_openInTab('https://raw.github.com/doomred/hacer/master/beauty.user.js');
   } else {
-    alertNotice('`hacer\' is up-to-date');
+    alertNotice('`hacer\' is up-to-date', 1500);
   }
   void(0);
 }
@@ -134,8 +119,182 @@ function makegrabbable(targetDiv) {  /* make position=fixed div grabbable */
     };}, false);
 }
 
+  /* add CSS class toolbar-bottom */
+var classToolbar = document.body.getElementsByTagName('div');
+for(i = 0; i < classToolbar.length; i++){
+  if(classToolbar[i].style.width === '100%') {
+    classToolbar[i].classList.add('toolbar-bottom');
+  }
+}
 
-if(menuHide) {
+  /* init GM_config container, BUG */
+var classToolbar = document.getElementsByClassName('toolbar-bottom')[0];
+var gmconfigDiv = document.createElement('div');
+gmconfigDiv.id = 'gm-config';
+classToolbar.appendChild(gmconfigDiv);
+
+function feedreportback() {
+  var strWindowFeatures = 'left=50, top=50 location, resizable, scrollbars, status';
+  if(window.confirm('YES for github, NO for acfun')) {
+    
+    window.open('https://github.com/doomred/hacer/issues', 'FEED_ME_BUGS', strWindowFeatures);
+  } else {
+    window.open('http://acfun.tv', 'Report & Suggestion', strWindowFeatures);
+  }
+}
+
+  /* add feedback element */
+var fbAnchor = document.createElement('span');
+fbAnchor.id = 'hacerfeedback';
+fbAnchor.addEventListener('click',feedreportback, false);
+fbAnchor.style.textAlign = 'right';
+fbAnchor.innerHTML = 'feedback';
+
+
+GM_config.init(
+{
+  'id': 'GM_config',
+  'title': 'hacer setting',
+  'fields':
+  {
+    'quoteSize':
+    {
+      'label': 'Quotes recursive time: ',
+      'type': 'int',
+      'min': 1,
+      'max': 999,
+      'default': '4'
+    },
+    'twoupOn':
+    {
+      'label': 'Use 2-up style: ',
+      'type': 'checkbox',
+      'default': true
+    },
+    'menuHide':
+    {
+      'label': 'If menu auto hide: ',
+      'type': 'checkbox',
+      'default': true
+    },
+    'hboxOn':
+    {
+      'label': 'If enable hbox: ',
+      'type': 'checkbox',
+      'default': true
+    },
+    'wpOn':
+    {
+      'label': 'If enable writepad: ',
+      'type': 'checkbox',
+      'default': true
+    },
+    'adminOn':
+    {
+      'label': 'If enable adminTool: ',
+      'type': 'checkbox',
+      'default': false
+    },
+    'altCSS':
+    {
+      'label': 'The alternative CSS',
+      'type': 'textarea',
+      'default': '',
+      'save': false
+    },
+    'twOn':
+    {
+      'label': 'If enable Chinese time format: ',
+      'type': 'checkbox',
+      'default': true
+    },
+    'navFix':
+    {
+      'label': 'If fix page-navigation position',
+      'type': 'checkbox',
+      'default': true
+    },
+    'bqOn':
+    {
+      'label': 'If enable betterquote',
+      'type': 'checkbox',
+      'default': true
+    }
+  },
+  'events':
+  {
+    'init': function() { dynamicparts(); },
+    'open': function() { /*document.getElementById('GM_config').style = '';*/ },
+    'save': function() { alertNotice('Reload to active!', 1000); },
+    'close': function() { },
+    'reset': function() { }
+  },
+  'css': '#GM_config {position: static !important; width: 99% !important; margin: 1.5em auto !important; border: 0 !important;;}'
+  /*'frame': gmconfigDiv*/
+
+});
+
+
+  /* Initilize for switchers */
+function nullHandler() {  /* useless for now */
+  return false;
+}
+
+var currentStyle, currentAdmin, currentCSS;
+currentStyle = 'day';
+currentAdmin = 0;
+currentCSS = document.createElement('style');
+currentCSS.type = 'text/css';
+currentCSS.id = 'altcss';
+currentCSS.innerHTML = GM_config.get('altCSS'); /* initialize alternative CSS */
+htmlHead.appendChild(currentCSS);
+
+function parseframescss(targetCSS) {
+var tmpWindow, i, k;
+for(k = 0; k < window.top.frames.length; k++) {
+  (function recursive(tmpWindow) {
+    tmpWindow.document.getElementsByTagName('style')[0].innerHTML = targetCSS;
+    for(i = 0; i < tmpWindow.frames.length; i++) {
+        tmpWindow.frames[i].document.getElementsByTagName('style')[0].innerHTML = targetCSS;
+      if(tmpWindow.frames[i].frames.length) {
+        tmpWindow = tmpWindow.frames[i];
+        recursive(tmpWindow);
+      }
+    }
+    return false;
+  })(window.frames[k]);
+}
+}
+        
+function cssSwitchHandler() {
+  if(currentStyle === 'day') {
+    currentCSS.innerHTML = nightCSS;
+    parseframescss(frameNightCSS);
+    document.getElementById('cssswitcher').innerHTML = "CSS on";
+    currentStyle = 'night';
+  } else {
+    currentCSS.innerHTML = altCSS;
+    parseframescss(frameDayCSS);
+    document.getElementById('cssswitcher').innerHTML = "CSS off";
+    currentStyle = 'day';
+  }
+}
+
+
+function dynamicparts() {
+/* init dynamic toolbar links */
+classToolbar.innerHTML += '<span id="cssswitcher" >CSS off</span>'; /* initialize */
+if(GM_config.get('wpOn')) {
+  classToolbar.innerHTML += '<span id="writepadswitcher" >writepad</span>';
+}
+classToolbar.innerHTML += '<span id="settingswitcher" >SETTING</span>';
+classToolbar.appendChild(fbAnchor);
+document.getElementById('cssswitcher').addEventListener('click', cssSwitchHandler, false);
+document.getElementById('settingswitcher').addEventListener('click', function () {GM_config.open();}, false);
+
+
+if(GM_config.get('menuHide')) {
+  owCSS.innerHTML += '#menu {left: -125px; opacity: 0; transition: all 0.66s ease-in-out; padding: 0 0 0 1em; overflow: hidden; height: 100%}';
 function disablescroll(e) {
   e.preventDefault();
   e.returnValue = false;
@@ -180,15 +339,11 @@ idMenu.onmouseout = function () {
 }
 
 
-function switchadmin(keycode) {  /* enable hidden adminTools */
+if(GM_config.get('adminOn')) {  /* enable hidden adminTools */
   var classAdminTool, i;
   classAdminTool = document.getElementsByClassName("adminTool");
   for(i = 0; i < classAdminTool.length; i++) {
-    if(keycode) {
-      classAdminTool[i].style.display = 'inline';
-    } else {
-      classAdminTool[i].style.display = 'none';
-    }
+    classAdminTool[i].style.display = 'inline';
   }
 }
 
@@ -200,12 +355,14 @@ k = 1;
 for(i = 0; i < divThreads.length; i++) {
   divThreadsName = divThreads[i].className;
   divThreadsStyle = divThreads[i].style;
+  if(GM_config.get('twoupOn')) {
   if(divThreadsStyle.clear.search('both') !== -1) {  /* del nonsense clear:both */
     if(k === 1) {
       divThreadsStyle.clear = 'none';
     }
     k *= -1;
   }
+}
   if(divThreadsName.search('threads') !== -1) {
     divThreads[i].classList.add('threadfly');
   }
@@ -221,17 +378,18 @@ for(i = 0; i < classThreadfly.length; i++) {
   bqOPPic.classList.add('originpost-pic');
 }
 
-if(twoupOn) {
+if(GM_config.get('twoupOn')) {
+  owCSS.innerHTML += '.threadfly {width: 45%; float: left; margin-left: 1%; margin-bottom: 2em;}';
+owCSS.innerHTML += '.threadfly table font {display: none;}';
+owCSS.innerHTML += '.rthreads {border-left-width: 15px; border-left-style: solid; padding: 0 0 0 2%; margin: 0 0 2em 2%;}';
+
   /* dirty hack, check if in thread reply page */
 if(classThreadfly.length === 1)  {
   owCSS.innerHTML += '.threadfly {width: 80%; margin: 2em 10%; } .threadpost {padding: 0 5em;}';
 }
 
   /* remove all hr */
-var hrBar = window.document.getElementsByTagName("hr");
-for (i = 0; i < hrBar.length; i++) {
-  hrBar[i].style.display = 'none';
-}
+  owCSS.innerHTML += 'hr {display:none;}';
 
   /* add left border and related */
 k = -1;
@@ -242,7 +400,9 @@ for(i = 0; i < classThreadfly.length; i++, k *= -1) {
 }
 }
 
-if(twOn) {
+if(GM_config.get('twOn')) {
+
+  owCSS.innerHTML += '.posttime {margin-left: 0.5em;} p, body {margin: 0;} ';
   /* use good time format */
 var tmp, tmpWeekdayPost, tmpMonthPost, tmpDayPost, objDate;
 var classPosttime = document.getElementsByClassName("posttime");
@@ -258,7 +418,7 @@ for(i = 0; i < classPosttime.length; i++) {
 }
 
 
-if(navFix) {
+if(GM_config.get('navFix')) {
   /* replace the page navigation */
 var key, tableNavigation;
 tableNavigation = document.getElementsByTagName('table');
@@ -269,16 +429,9 @@ if(tableNavigation[key].align === 'left') {
 }
 }
 
-  /* add CSS class toolbar-bottom */
-var classToolbar = document.body.getElementsByTagName('div');
-for(i = 0; i < classToolbar.length; i++){
-  if(classToolbar[i].style.width === '100%') {
-    classToolbar[i].classList.add('toolbar-bottom');
-  }
-}
 
 
-if(hboxOn) {
+if(GM_config.get('hboxOn')) {
 /* Use hbox to popup the Images
  * Rewrite from:  http://www.codeproject.com/Articles/32819/JavaScript-Image-Popup
  * Start Initializing
@@ -296,6 +449,7 @@ document.body.appendChild(hboxbgDiv);
   /* add hboxstuff style */
 var hboxStyle = document.createElement('style');
 hboxStyle.type = 'text/css';
+hboxStyle.id = 'hboxcss';
 hboxStyle.innerHTML = hboxCSS;
 htmlHead.appendChild(hboxStyle);
 
@@ -337,23 +491,22 @@ function imageOnloadHandler() {
   heightWindow = window.innerHeight || document.documentElement.offsetHeight;
   widthWindow = window.innerWidth || document.documentElement.offsetWidth;
   if(heightPic > heightWindow && (widthPic / heightPic) < 0.8) {  /* over 8:10, make scrollable */
-    idImageinbox.width = widthWindow -40;
+    idImageinbox.width = widthWindow -80;  /* 80 is MAGIC */
     idThebox = document.getElementById('thebox');
     idBoxBg= document.getElementById('box-bg');
-    idThebox.style.left = '20px';
+    idThebox.style.left = '40px';
     idThebox.style.top = 0;
     idThebox.style.position = 'fixed';
     idBoxBg.addEventListener('DOMMouseScroll', scrollimage, false);
-      /* disable window scroll event */
-    window.addEventListener('DOMMouseScroll', disablescroll, false);
+    window.addEventListener('DOMMouseScroll', disablescroll, false);  /* disable window scroll event */
     window.onmousewheel = document.onmousewheel = disablescroll;
-    alertNotice('Use Mouse Wheel to ajust');
+    alertNotice('Use Mouse Wheel to ajust!', 1500);
   } else if(heightPic > heightWindow) {
-    alertNotice('The image is shrinked, right click to view the full resolution');
-    idImageinbox.height = heightWindow - 40;
+    idImageinbox.height = heightWindow - 50;  /* 50 is MAGIC */
+    alertNotice('The image is ' + parseInt(idImageinbox.height / heightPic * 100) + '% shrinked', 3000);
   } else if(widthPic > widthWindow) {
-      alertNotice('The image is shrinked, right click to view the full resolution');
-      idImageinbox.width = widthWindow - 40;
+      idImageinbox.width = widthWindow - 50;
+      alertNotice('The image is ' + parseInt(idImageinbox.width / widthPic * 100) + '% shrinked', 3000);
   }
   hboxDiv.style.backgroundImage = '';  /* remove the loading gif */
 }
@@ -410,27 +563,9 @@ function imageparse(targetObj) {  /* make anchor useless and parse image */
 }
 
 
-  /* Initilize for switchers */
-function nullHandler() {  /* useless for now */
-  return false;
-}
-
-var currentStyle, currentDangerious, currentAdmin, currentCSS;
-currentStyle = 'day';
-currentDangerious = 0;
-currentAdmin = 0;
-currentCSS = document.createElement('style');
-currentCSS.type = 'text/css';
-currentCSS.innerHTML = altCSS; /* initialize */
-htmlHead.appendChild(currentCSS);
-
-  /* add links to the toolbar-bottom */
-var classToolbar = document.getElementsByClassName('toolbar-bottom')[0];
-classToolbar.innerHTML += '<span id="cssswitcher" >CSS off</span>'; /* initialize */
-classToolbar.innerHTML += '<span id="writepadswitcher" >writepad</span>'; /* initialize writepad*/
-classToolbar.innerHTML += '<span id="dangerswitcher" <pre>\/!\\DANGER\/!\\</pre></span>';  /* danger area initialize */
-
-if(wpOn) {
+if(GM_config.get('wpOn')) {
+  owCSS.innerHTML += '#postform_tblabandon p {line-height: 1.5em; padding-bottom: 2em;}';
+owCSS.innerHTML += '#writepad {padding: 1em; background: grey;}';
   /* add writepad */
 var padDisplay, idPostformMain, padDiv;
 padDisplay = 0;
@@ -479,107 +614,14 @@ function padSwitchHandler() {
     padDiv.style.display = 'inline';
   }
 }
+if(GM_config.get('wpOn')) {
+  document.getElementById('writepadswitcher').addEventListener('click', padSwitchHandler, false);
+}
+
 }
 
 
-  /* add danger area */
-var spanDanger = document.createElement('span');
-spanDanger.id = 'dangerarea';
-spanDanger.style.display = 'none';
-spanDanger.innerHTML += '<span id="adminswitcher" >Admin off</span>';
-spanDanger.innerHTML += '<span id="csschanger" >Change_CSS</span>';
-classToolbar.appendChild(spanDanger);
-
-function dangerSwitchHandler() {
-  if(currentDangerious) {
-    spanDanger.style.display = 'none';
-    currentDangerious = 0;
-  } else {
-    spanDanger.style.display = 'inline';
-    currentDangerious = 1;
-  }
-}
-
-function feedreportback() {
-  var strWindowFeatures = 'left=50, top=50 location, resizable, scrollbars, status';
-  if(window.confirm('YES for github, NO for acfun')) {
-    
-    window.open('https://github.com/doomred/hacer/issues', 'FEED_ME_BUGS', strWindowFeatures);
-  } else {
-    window.open('http://acfun.tv', 'Report & Suggestion', strWindowFeatures);
-  }
-}
-
-  /* add feedback element */
-var fbAnchor = document.createElement('span');
-fbAnchor.id = 'hacerfeedback';
-fbAnchor.addEventListener('click',feedreportback, false);
-fbAnchor.style.textAlign = 'right';
-fbAnchor.innerHTML = 'feedback';
-classToolbar.appendChild(fbAnchor);
-
-
-function cssChangeHandler() {
-  altCSS = window.prompt("Replace the alternate CSS");
-  if(currentStyle === 'night') {
-    document.getElementById('cssswitcher').innerHTML = "CSS off";
-    currentCSS.innerHTML = altCSS;
-    currentStyle = 'day';
-  } else {
-    currentCSS.innerHTML = altCSS;
-  }
-}
-
-
-function parseframescss(targetCSS) {
-var tmpWindow, i, k;
-for(k = 0; k < window.top.frames.length; k++) {
-  (function recursive(tmpWindow) {
-    tmpWindow.document.getElementsByTagName('style')[0].innerHTML = targetCSS;
-    for(i = 0; i < tmpWindow.frames.length; i++) {
-        tmpWindow.frames[i].document.getElementsByTagName('style')[0].innerHTML = targetCSS;
-      if(tmpWindow.frames[i].frames.length) {
-        tmpWindow = tmpWindow.frames[i];
-        recursive(tmpWindow);
-      }
-    }
-    return false;
-  })(window.frames[k]);
-}
-}
-        
-function cssSwitchHandler() {
-  if(currentStyle === 'day') {
-    currentCSS.innerHTML = nightCSS;
-    parseframescss(frameNightCSS);
-    document.getElementById('cssswitcher').innerHTML = "CSS on";
-    currentStyle = 'night';
-  } else {
-    currentCSS.innerHTML = altCSS;
-    parseframescss(frameDayCSS);
-    document.getElementById('cssswitcher').innerHTML = "CSS off";
-    currentStyle = 'day';
-  }
-}
-
-function adminSwitchHandler() {
-  if(currentAdmin) {
-    currentAdmin = 0;
-    switchadmin(currentAdmin);
-    document.getElementById('adminswitcher').innerHTML = "Admin off";
-  } else {
-    currentAdmin = 1;
-    switchadmin(currentAdmin);
-    document.getElementById('adminswitcher').innerHTML = "Admin on";
-  }
-}
-document.getElementById('cssswitcher').addEventListener('click', cssSwitchHandler, false);
-document.getElementById('writepadswitcher').addEventListener('click', padSwitchHandler, false);
-document.getElementById('dangerswitcher').addEventListener('click', dangerSwitchHandler, false);
-document.getElementById('adminswitcher').addEventListener('click', adminSwitchHandler, false);
-document.getElementById('csschanger').addEventListener('click', cssChangeHandler, false);
-
-if(bqOn) {
+if(GM_config.get('bqOn')) {
 /* remove refView divbox */
 var idRefView = window.top.document.getElementById('refView');
 if(idRefView) {
@@ -645,6 +687,7 @@ function styletheframe(targetObj) {  /* insert css into iframe */
     headFrame = targetObj.document.getElementsByTagName('head')[0];
     iframeCSS = document.createElement('style');
     iframeCSS.type = 'text/css';
+    iframeCSS.id = 'framecss';
     iframeCSS.innerHTML += 'html body tbody tr td font[color="#cc1105"],font[color="#117743"] {display: none;}';
     iframeCSS.innerHTML += 'html body tbody tr td font[color="#789922"] {color: red;}';
     iframeCSS.innerHTML += '.posttime {display: none;}';
@@ -674,14 +717,14 @@ function frameOnloadHandler(e) {
   if(!e && window.event)  {e = window.event;}
   eventSender = (window.event) ? e.srcElement : e.target;
   windowCaller = eventSender.contentWindow || eventSender;
-  if(hboxOn) {imageparse(windowCaller);}
+  if(GM_config.get('hboxOn')) {imageparse(windowCaller);}
     /* get mainFrameId */
   tmp = windowCaller;
   while(tmp.name === '' || tmp.name.search('iframe') === -1)  {tmp = tmp.parent;}
   mainFrameKey = tmp.name.substr(7);
   recurKey = mainFrameList[mainFrameKey];
   mainFrameList.splice(mainFrameKey, 1, recurKey + 1);
-  if(mainFrameList[mainFrameKey] < quoteSize) {
+  if(mainFrameList[mainFrameKey] < GM_config.get('quoteSize')) {
     if(!betterquote(windowCaller)) {
       styletheframe(windowCaller);
       tmpWindow = windowCaller.parent;
@@ -743,5 +786,6 @@ for(k = 0; k < tpBar.length; k++) {
       }
     }
   }  
+}
 }
 }
