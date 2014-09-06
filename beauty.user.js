@@ -55,7 +55,9 @@ htmlBody = window.document.getElementsByTagName('body')[0];
 owCSS = window.document.createElement('style');
 owCSS.type = 'text/css';
 owCSS.id = 'overwritecss';
+owCSS.innerHTML += '#postform_tbl p {line-height: 1.5em; padding-bottom: 2em;}';
 owCSS.innerHTML += 'body {min-width: 50em; overflow-x: hidden;}';
+owCSS.innerHTML += '#right_content {margin: 0 50px;}';
 owCSS.innerHTML += '.nav-bottom {position: fixed; bottom: 1em; right: 0; z-index: 100; font-size: 12pt !important;}';
 owCSS.innerHTML += '.originpost {padding-bottom:6em !important; }';
 owCSS.innerHTML += '#hacerfeedback, #dangerarea, #dangerswitcher, #cssswitcher, #writepadswitcher, #settingswitcher  {text-decoration: underline; margin: 0 0.5em;}';
@@ -130,11 +132,12 @@ for (i = 0; i < classToolbar.length; i++) {
     }
 }
 
-/* init GM_config container, BUG */
+/* init GM_config container */
 var classToolbar = document.getElementsByClassName('toolbar-bottom')[0];
-var gmconfigDiv = document.createElement('div');
+var gmconfigDiv = document.createElement('div');  /* plan to contain setting panel */
 gmconfigDiv.id = 'gm-config';
 classToolbar.appendChild(gmconfigDiv);
+
 function feedreportback() {
     var strWindowFeatures = 'left=50, top=50 location, resizable, scrollbars, status';
     if (window.confirm('YES for github, NO for acfun')) {
@@ -197,8 +200,7 @@ GM_config.init({
         {
             'label': 'The alternative CSS',
             'type': 'textarea',
-            'default': '',
-            'save': false
+            'default': ''
         },
         'twOn':
         {
@@ -225,68 +227,71 @@ GM_config.init({
             dynamicparts();
         },
         'open': function () {
-            /*document.getElementById('GM_config').style = '';*/
+            /* document.getElementById('GM_config').style = ''; */
         },
         'save': function () {
             alertNotice('Reload to active!', 1000);
         },
         'close': function () {
-        },
-        'reset': function () {
         }
     },
     'css': '#GM_config {position: static !important; width: 99% !important; margin: 1.5em auto !important; border: 0 !important;;}'
-    /*'frame': gmconfigDiv*/
+    /* 'frame': gmconfigDiv */
 });
 
-/* Initilize for switchers */
-function nullHandler() {
-    /* useless for now */
-    return false;
-}
-var currentStyle, currentAdmin, currentCSS;
-currentStyle = 'day';
-currentAdmin = 0;
-currentCSS = document.createElement('style');
-currentCSS.type = 'text/css';
-currentCSS.id = 'altcss';
-currentCSS.innerHTML = GM_config.get('altCSS');
-
-/* initialize alternative CSS */
-htmlHead.appendChild(currentCSS);
-function parseframescss(targetCSS) {
-    var i, k;
-    for (k = 0; k < window.top.frames.length; k++) {
-        (function recursive(tmpWindow) {
-            tmpWindow.document.getElementsByTagName('style')[0].innerHTML = targetCSS;
-            for (i = 0; i < tmpWindow.frames.length; i++) {
-                tmpWindow.frames[i].document.getElementsByTagName('style')[0].innerHTML = targetCSS;
-                if (tmpWindow.frames[i].frames.length) {
-                    tmpWindow = tmpWindow.frames[i];
-                    recursive(tmpWindow);
-                }
-            }
-            return false;
-        })(window.frames[k]);
-    }
-}
-function cssSwitchHandler() {
-    if (currentStyle === 'day') {
-        currentCSS.innerHTML = nightCSS;
-        parseframescss(frameNightCSS);
-        document.getElementById('cssswitcher') .innerHTML = 'CSS on';
-        currentStyle = 'night';
-    } else {
-        currentCSS.innerHTML = GM_config.get('altCSS');
-        parseframescss(frameDayCSS);
-        document.getElementById('cssswitcher') .innerHTML = 'CSS off';
-        currentStyle = 'day';
-    }
-}
+    classToolbar.innerHTML += '<span id="settingswitcher" >SETTING</span>';
+    document.getElementById('settingswitcher') .addEventListener('click', function () {
+        GM_config.open();
+    }, false);
 
 function dynamicparts() {
     /* init foobar varibles */
     var i = 0, k = 0, tmp = null;
+
+    /* Initilize for switchers */
+    function nullHandler() {
+        /* useless for now */
+        return false;
+    }
+    var currentStyle, currentAdmin, currentCSS;
+    currentStyle = 'day';
+    currentAdmin = 0;
+    currentCSS = document.createElement('style');
+    currentCSS.type = 'text/css';
+    currentCSS.id = 'altcss';
+    currentCSS.innerHTML = GM_config.get('altCSS');
+
+    /* initialize alternative CSS */
+    htmlHead.appendChild(currentCSS);
+    function parseframescss(targetCSS) {
+        var i, k;
+        for (k = 0; k < window.top.frames.length; k++) {
+            (function recursive(tmpWindow) {
+                tmpWindow.document.getElementsByTagName('style')[0].innerHTML = targetCSS;
+                for (i = 0; i < tmpWindow.frames.length; i++) {
+                    tmpWindow.frames[i].document.getElementsByTagName('style')[0].innerHTML = targetCSS;
+                    if (tmpWindow.frames[i].frames.length) {
+                        tmpWindow = tmpWindow.frames[i];
+                        recursive(tmpWindow);
+                    }
+                }
+                return false;
+            })(window.frames[k]);
+        }
+    }        
+    function cssSwitchHandler() {
+        if (currentStyle === 'day') {
+            currentCSS.innerHTML = nightCSS;
+            parseframescss(frameNightCSS);
+            document.getElementById('cssswitcher') .innerHTML = 'CSS on';
+            currentStyle = 'night';
+        } else {
+            currentCSS.innerHTML = GM_config.get('altCSS');
+            parseframescss(frameDayCSS);
+            document.getElementById('cssswitcher') .innerHTML = 'CSS off';
+            currentStyle = 'day';
+        }
+    }
 
     /* init dynamic toolbar links */
     classToolbar.innerHTML += '<span id="cssswitcher" >CSS off</span>';
@@ -352,8 +357,12 @@ function dynamicparts() {
         var menuBlock, idRightContent, idMenu;
         idRightContent = window.document.getElementById('right_content');
         idMenu = window.document.getElementById('menu');
-        idRightContent.style.margin = 0;  /* fix right_content */
-        idMenu.style.margin = idMenu.style.padding = idMenu.style.overflow = '';  /* overwrite dynamic style */
+	if(GM_config.get('twoupOn')) {
+            idRightContent.style.margin = 0;  /* fix right_content */
+	} else {
+            idRightContent.style.margin = '';  /* overwrite dynamic generated style */
+	}
+        idMenu.style.margin = idMenu.style.padding = idMenu.style.overflow = '';  /* overwrite dynamic generated style */
         idMenu.style.left = '-125px';  /* overwrite dynamic style */
         menuBlock = window.document.createElement('span');  /* dirty hack, depend on dynamic generate height */
         menuBlock.innerHTML = '<br />';
@@ -502,15 +511,13 @@ function dynamicparts() {
                 window.onmousewheel = document.onmousewheel = disablescroll;
                 alertNotice('Use Mouse Wheel to ajust!', 1500);
             } else if (heightPic > heightWindow) {
-                idImageinbox.height = heightWindow - 50;
-                /* 50 is MAGIC */
+                idImageinbox.height = heightWindow - 50;  /* 50 is MAGIC */
                 alertNotice('The image is ' + parseInt(idImageinbox.height / heightPic * 100) + '% shrinked', 3000);
             } else if (widthPic > widthWindow) {
                 idImageinbox.width = widthWindow - 50;
                 alertNotice('The image is ' + parseInt(idImageinbox.width / widthPic * 100) + '% shrinked', 3000);
             }
-            hboxDiv.style.backgroundImage = '';
-            /* remove the loading gif */
+            hboxDiv.style.backgroundImage = '';  /* remove the loading gif */
         }
         function hboxLauncher(e) {
             var eventSender, imageSource, hboxImg;
@@ -567,8 +574,20 @@ function dynamicparts() {
     }
 
     if (GM_config.get('wpOn')) {
+        function padSwitchHandler() {
+            if (padDisplay) {
+                padDisplay = 0;
+                padDiv.style.display = 'none';
+            } else {
+                padDisplay = 1;
+                padDiv.style.display = 'inline';
+            }
+        }
+
         owCSS.innerHTML += '#postform_tblabandon p {line-height: 1.5em; padding-bottom: 2em;}';
-        owCSS.innerHTML += '#writepad {padding: 1em; background: grey;}';
+        owCSS.innerHTML += '#writepad {border: 2px solid; background-color: #a09797;}';
+        owCSS.innerHTML += '#writepad-close:hover {cursor: pointer; text-decoration: underline;}';
+        owCSS.innerHTML += '#writepad-close {width: 100% ; color: white; background-color: #810400; text-align: center; font-weight: bold; font-size: 1.5em;}';
         /* add writepad */
         var padDisplay, idPostformMain, padDiv;
         padDisplay = 0;
@@ -589,8 +608,8 @@ function dynamicparts() {
             idToAbandon.id += 'abandon';
             /* abadon original id, move into pad smoothly */
         }
-        /* rebuild the postform_main */
 
+        /* rebuild the postform_main */
         var padForm = document.createElement('form');
         padForm.id = 'postform_main';
         padForm.enctype = 'multipart/form-data';
@@ -603,8 +622,15 @@ function dynamicparts() {
             /* save the notice board */
             trBad[i].style.display = 'none';
         }
-        /* style the writepad */
 
+        /* add a close button */
+	var padClose = document.createElement('div');
+	padClose.id = 'writepad-close';
+	padClose.innerHTML = 'CLOSE';
+	padClose.addEventListener('click', padSwitchHandler, false);
+        padDiv.appendChild(padClose);
+
+        /* style the writepad */
         padDiv.style.position = 'fixed';
         padDiv.style.top = '50px';
         padDiv.style.left = '50px';
@@ -612,17 +638,7 @@ function dynamicparts() {
         padDiv.style.display = 'none';
         padDiv.appendChild(padForm);
         document.body.appendChild(padDiv);
-        makegrabbable(padDiv);
-        /* make the pad grabbable */
-        function padSwitchHandler() {
-            if (padDisplay) {
-                padDisplay = 0;
-                padDiv.style.display = 'none';
-            } else {
-                padDisplay = 1;
-                padDiv.style.display = 'inline';
-            }
-        }
+        makegrabbable(padDiv);  /* make the pad grabbable */
         if (GM_config.get('wpOn')) {
             document.getElementById('writepadswitcher') .addEventListener('click', padSwitchHandler, false);
         }
@@ -639,10 +655,8 @@ function dynamicparts() {
             frameWinList = objWindow.frames;
             frameList = objWindow.document.getElementsByTagName('iframe');
             for (i = 0; i < frameWinList.length; i++) {
-                heightNew = frameWinList[i].document.getElementsByTagName('table')[0].clientHeight + 5;
-                /* 5 is MAGIC */
-                widthNew = frameWinList[i].document.getElementsByTagName('table')[0].clientWidth + 5;
-                /* 5 is MAGIC */
+                heightNew = frameWinList[i].document.getElementsByTagName('table')[0].clientHeight + 8;  /* 8 is MAGIC */
+                widthNew = frameWinList[i].document.getElementsByTagName('table')[0].clientWidth + 5;  /* 5 is MAGIC */
                 frameList[i].style.height = heightNew + 'px';
                 frameList[i].style.width = widthNew + 'px';
                 frameList[i].scrolling = 'no';
