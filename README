@@ -18,6 +18,9 @@ How is the developing method?
 1) Using branch devvel(means hitting hard something & someone)
 2) Bum what you like to hack. Notice that all (necessary) files in devvel branch is linking with each other.
 
+How is the developing versioning?
+Append your unique alphabets(or world) to master branch version.
+
 Why not using multi-line CSS in the main js file?
 I think it's more user friendly to all,
 with standalone CSS file & merge into main js benefits:

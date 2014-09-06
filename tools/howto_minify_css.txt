@@ -1,5 +1,6 @@
 I use hcssmin(haskell)
 
 Compile: ghc -o hcssmin hcssmin.hs
+WARNING: hcssmin cannot handle '//' commits!
 More Info: https://github.com/rayshon/hcssmin
 Recommend is welcome via new Issue.
