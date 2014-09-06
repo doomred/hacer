@@ -15,7 +15,8 @@ tools			-some howto texts & necessary related tools
 
 FAQ:
 How is the developing method?
-1) Using branch devvel(means hitting hard something & someone)
+0) Install hacer(the non-dev version) if you don't have one.
+1) Copy content of branch devvel(means hitting hard something & someone)
 2) Bum what you like to hack. Notice that all (necessary) files in devvel branch is linking with each other.
 
 How is the developing versioning?

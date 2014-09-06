@@ -12,7 +12,7 @@
 // @updateURL https://raw.github.com/doomred/hacer/devvel/hacer.meta.js
 // @require https://raw.github.com/doomred/hacer/devvel/hacer.gm_config.js
 // @resource mburl https://raw.github.com/doomred/hacer/devvel/hacer.meta.js
-// @resource hboxCSS https://raw.github.com/doomred/hacer/devvel/hacer.meta.js
+// @resource hboxCSS https://raw.github.com/doomred/hacer/devvel/hbox.css
 // @resource framenightcss https://raw.github.com/doomred/hacer/devvel/framenight.css
 // @resource framedaycss https://raw.github.com/doomred/hacer/devvel/frameday.css
 // @resource nightcss https://raw.github.com/doomred/hacer/devvel/night.css
@@ -83,7 +83,7 @@ function alertNotice(alertContent, delay) {
 }
 
 function forceupdate() {
-  GM_openInTab('https://raw.github.com/doomred/hacer/master/beauty.user.js');
+  GM_openInTab('https://raw.github.com/doomred/hacer/devvel/beauty.user.js');
   void(0);
 }
 
@@ -91,15 +91,15 @@ function checkupdate() {
   var updateMB = GM_getResourceText('mburl');
   if(updateMB.search(hacerVersion) === -1) {
     alertNotice('New version Found, please wait awhile to install.', 3000);
-    GM_openInTab('https://raw.github.com/doomred/hacer/master/beauty.user.js');
+    GM_openInTab('https://raw.github.com/doomred/hacer/devvel/beauty.user.js');
   } else {
     alertNotice('`hacer\' is up-to-date', 1500);
   }
   void(0);
 }
 
-GM_registerMenuCommand('hacer | check update', checkupdate, 'h');
-GM_registerMenuCommand('hacer | force update', forceupdate, 'f');
+GM_registerMenuCommand('hacer-dev | check update', checkupdate, 'h');
+GM_registerMenuCommand('hacer-dev | force update', forceupdate, 'f');
 
 function makegrabbable(targetDiv) {  /* make position=fixed div grabbable */
 
