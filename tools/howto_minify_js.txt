@@ -1,5 +1,0 @@
-use SlimIt(python)
-
-Install: [sudo] pip install slimit
-More Info: https://github.com/rspivak/slimit
-Recommend is welcome via new Issue.
