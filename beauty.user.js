@@ -886,8 +886,7 @@ function checkupdate() {
 GM_registerMenuCommand('hacer| check update', checkupdate, 'h');
 GM_registerMenuCommand('hacer| force update', forceupdate, 'f');
 
-function makegrabbable(targetDiv) {
-    /* make position=fixed div grabbable */
+function makegrabbable(targetDiv) {  /* make position=fixed div grabbable */
     targetDiv.addEventListener('mousedown', function (e) {
         if (!e && window.event) {
             e = window.event;
@@ -1027,8 +1026,7 @@ function dynamicparts() {
     var i = 0, k = 0, tmp = null;
 
     /* Initilize for switchers */
-    function nullHandler() {
-        /* useless for now */
+    function nullHandler() {  /* useless for now */
         return false;
     }
     var currentCSS;
@@ -1137,8 +1135,8 @@ function dynamicparts() {
             }
             idMenu.scrollTop -= delta;
         }
-        /* initialize the menu */
 
+        /* initialize left menu */
         var menuBlock, idRightContent, idMenu;
         idRightContent = window.document.getElementById('right_content');
         idMenu = window.document.getElementById('menu');
@@ -1197,6 +1195,7 @@ function dynamicparts() {
 
     if (GM_config.get('twOn')) {
         owCSS.innerHTML += '.posttime {margin-left: 0.5em;} p, body {margin: 0;} ';
+
         /* use good time format */
         var tmpWeekdayPost, tmpMonthPost, tmpDayPost, objDate;
         var classPosttime = document.getElementsByClassName('posttime');
@@ -1215,8 +1214,7 @@ function dynamicparts() {
         /* replace the page navigation */
         var key, tableNavigation;
         tableNavigation = document.getElementsByTagName('table');
-        key = tableNavigation.length -1;
-        /* dirty hack, may failed later */
+        key = tableNavigation.length -1;  /* dirty hack, may failed later */
         if (tableNavigation[key].align === 'left') {
             tableNavigation[key].classList.add('nav-bottom');
             tableNavigation[key].align = '';
@@ -1236,6 +1234,7 @@ function dynamicparts() {
         hboxbgDiv.id = 'box-bg';
         hboxbgDiv.appendChild(hboxDiv);
         document.body.appendChild(hboxbgDiv);
+
         /* add hboxstuff style */
         var hboxStyle = document.createElement('style');
         hboxStyle.type = 'text/css';
@@ -1254,8 +1253,7 @@ function dynamicparts() {
                 hboxDiv.style.position = '';
                 window.removeEventListener('DOMMouseScroll', disablescroll);
                 window.onmousewheel = document.onmousewheel = null;
-                hboxDiv.style.backgroundImage = hboxLoadImage;
-                /* revoke the loading gif */
+                hboxDiv.style.backgroundImage = hboxLoadImage;  /* revoke the loading gif */
             }
         }
         function scrollimage(e) {
@@ -1281,18 +1279,15 @@ function dynamicparts() {
             widthPic = idImageinbox.clientWidth;
             heightWindow = window.innerHeight || document.documentElement.offsetHeight;
             widthWindow = window.innerWidth || document.documentElement.offsetWidth;
-            if (heightPic > heightWindow && (widthPic / heightPic) < 0.8) {
-                /* over 8:10, make scrollable */
-                idImageinbox.width = widthWindow - 80;
-                /* 80 is MAGIC */
+            if (heightPic > heightWindow && (widthPic / heightPic) < 0.8) {  /* over 8:10, make scrollable */
+                idImageinbox.width = widthWindow - 80;  /* 80 is MAGIC */
                 idThebox = document.getElementById('thebox');
                 idBoxBg = document.getElementById('box-bg');
                 idThebox.style.left = '40px';
                 idThebox.style.top = 0;
                 idThebox.style.position = 'fixed';
                 idBoxBg.addEventListener('DOMMouseScroll', scrollimage, false);
-                window.addEventListener('DOMMouseScroll', disablescroll, false);
-                /* disable window scroll event */
+                window.addEventListener('DOMMouseScroll', disablescroll, false);  /* disable window scroll event */
                 window.onmousewheel = document.onmousewheel = disablescroll;
                 alertNotice('Use Mouse Wheel to ajust!', 1500);
             } else if (heightPic > heightWindow) {
@@ -1330,29 +1325,24 @@ function dynamicparts() {
             anchorThread = classThreadfly[k].getElementsByTagName('a');
             for (i = 0; i < anchorThread.length; i++) {
                 imgThread = anchorThread[i].getElementsByTagName('img');
-                if (imgThread.length) {
-                    /* fix the origin anchor */
+                if (imgThread.length) {  /* fix the origin anchor */
                     anchorThread[i].rel = anchorThread[i].href;
                     anchorThread[i].addEventListener('click', hboxLauncher, false);
                     anchorThread[i].target = '';
-                    anchorThread[i].href = 'javascript:void(0);';
-                    /* dirty hack, use span instead */
+                    anchorThread[i].href = 'javascript:void(0);';  /* dirty hack, use span instead */
                 }
             }
         }
-        function imageparse(targetObj) {
-            /* make anchor useless and parse image */
+        function imageparse(targetObj) {  /* make anchor useless and parse image */
             var imgThread, anchorThread;
             anchorThread = targetObj.document.getElementsByTagName('a');
             for (i = 0; i < anchorThread.length; i++) {
                 imgThread = anchorThread[i].getElementsByTagName('img');
-                if (imgThread.length) {
-                    /* fix the origin anchor */
+                if (imgThread.length) {  /* fix the origin anchor */
                     anchorThread[i].rel = anchorThread[i].href;
                     anchorThread[i].addEventListener('click', hboxLauncher, false);
                     anchorThread[i].target = '';
-                    anchorThread[i].href = 'javascript:void(0);';
-                    /* dirty hack, use span instead */
+                    anchorThread[i].href = 'javascript:void(0);';  /* dirty hack, use span instead */
                 }
             }
         }
@@ -1390,8 +1380,7 @@ function dynamicparts() {
         ];
         for (i = 0; i < padListAbandon.length; i++) {
             idToAbandon = document.getElementById(padListAbandon[i]);
-            idToAbandon.id += 'abandon';
-            /* abadon original id, move into pad smoothly */
+            idToAbandon.id += 'abandon';  /* abadon original id, move into pad smoothly */
         }
 
         /* rebuild the postform_main */
@@ -1460,25 +1449,20 @@ function dynamicparts() {
                 fontBar = tpBar[k].getElementsByTagName('font');
                 for (i = 0; i < fontBar.length; i++) {
                     tmpColor = fontBar[i].color;
-                    if (tmpColor.search('789922') !== -1) {
-                        /* replace font with iframe tag */
+                    if (tmpColor.search('789922') !== -1) {  /* replace font with iframe tag */
                         tmp = fontBar[i].innerHTML;
                         tmp = tmp.substr(tmp.search('No') + 3);
-                        if (!isNaN(parseInt(tmp, 10))) {
-                            /* abandon on nonsense */
+                        if (!isNaN(parseInt(tmp, 10))) {  /* abandon on nonsense */
                             numFrames += 1;
                             quoteFrameSrc = 'http://h.acfun.tv/homepage/ref?tid=' + tmp;
                             quoteFrame[i] = document.createElement('iframe');
                             quoteFrame[i].src = quoteFrameSrc;
-                            quoteFrame[i].onload = frameOnloadHandler;
-                            /* use onload Handler, instead of checkonload */
+                            quoteFrame[i].onload = frameOnloadHandler;  /* use onload Handler, instead of checkonload */
                             quoteFrameParent[i] = fontBar[i].parentNode;
                             quoteFrameParent[i].replaceChild(quoteFrame[i], fontBar[i]);
-                            i--;
-                            /* dirty hack, onSuccess, fontBar.length will minus one */
+                            i--;  /* dirty hack, onSuccess, fontBar.length will minus one */
                         } else {
-                            fontBar[i].color = 'blue';
-                            /* recolor nonsense quotes */
+                            fontBar[i].color = 'blue';  /* recolor nonsense quotes */
                         }
                     }
                 }
@@ -1506,8 +1490,7 @@ function dynamicparts() {
                 tdFirst = targetObj.document.getElementsByTagName('td')[0];
                 tdFirst.parentElement.removeChild(tdFirst);
                 anchorInFrame = targetObj.document.getElementsByTagName('a');
-                for (i = 0; i < anchorInFrame.length; i++) {
-                    /* fix in_frame link */
+                for (i = 0; i < anchorInFrame.length; i++) {  /* fix in_frame link */
                     anchorInFrame[i].target = '_top';
                 }
             } else {
@@ -1549,8 +1532,7 @@ function dynamicparts() {
                     }
                     setTimeout(function () {
                         callResize(window);
-                    }, 2500);
-                    /* dirty hack, MAGIC reduce error */
+                    }, 500);  /* dirty hack, MAGIC reduce error */
                 }
             } else {
                 fontBar = windowCaller.document.getElementsByTagName('font');
@@ -1584,30 +1566,24 @@ function dynamicparts() {
         tpBar = window.document.getElementsByClassName('threadpost');
         for (k = 0; k < tpBar.length; k++) {
             fontBar = tpBar[k].getElementsByTagName('font');
-            for (i = 0; i < fontBar.length && i >= 0; i++) {
-                /* left when parsed all */
+            for (i = 0; i < fontBar.length && i >= 0; i++) {  /* left when parsed all */
                 tmpColor = fontBar[i].color;
-                if (tmpColor.search('789922') !== -1) {
-                    /* replace font with iframe tag */
+                if (tmpColor.search('789922') !== -1) {  /* replace font with iframe tag */
                     tmp = fontBar[i].innerHTML;
                     tmp = tmp.substr(tmp.search('No') + 3);
-                    if (!isNaN(parseInt(tmp, 10))) {
-                        /* abandon on nonsense */
+                    if (!isNaN(parseInt(tmp, 10))) {  /* abandon on nonsense */
                         mainFrameList.push(0);
                         quoteFrameSrc = 'http://h.acfun.tv/homepage/ref?tid=' + tmp;
                         quoteFrame[i] = document.createElement('iframe');
                         quoteFrame[i].src = quoteFrameSrc;
                         quoteFrame[i].name = 'iframe_' + mainFrameKey;
-                        quoteFrame[i].onload = frameOnloadHandler;
-                        /* use onload Handler, instead of checkonload */
+                        quoteFrame[i].onload = frameOnloadHandler;  /* use onload Handler, instead of checkonload */
                         quoteFrameParent[i] = fontBar[i].parentNode;
                         quoteFrameParent[i].replaceChild(quoteFrame[i], fontBar[i]);
                         mainFrameKey += 1;
-                        i--;
-                        /* dirty hack, onSuccess, fontBar.length will minus one */
+                        i--;  /* dirty hack, onSuccess, fontBar.length will minus one */
                     } else {
-                        fontBar[i].color = 'blue';
-                        /* recolor the nonsense */
+                        fontBar[i].color = 'blue';  /* recolor the nonsense */
                     }
                 }
             }
