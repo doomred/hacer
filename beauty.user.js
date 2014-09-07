@@ -821,6 +821,7 @@ var i = 0, k = 0;
 
 /* init variable Handler */
 var hacerVersion = '0.0.8';
+var currentStyle = GM_getValue('gm_currentstyle', 'day');
 
 
 var hboxCSS, nightCSS, frameNightCSS, frameDayCSS;
@@ -838,7 +839,7 @@ owCSS = window.document.createElement('style');
 owCSS.type = 'text/css';
 owCSS.id = 'overwritecss';
 owCSS.innerHTML += '#postform_tbl p {line-height: 1.5em; padding-bottom: 2em;}';
-owCSS.innerHTML += 'body {min-width: 50em; overflow-x: hidden;}';
+owCSS.innerHTML += 'body {margin: -2em; min-width: 50em; overflow-x: hidden;}';
 owCSS.innerHTML += '#right_content {margin: 0 50px;}';
 owCSS.innerHTML += '.nav-bottom {position: fixed; bottom: 1em; right: 0; z-index: 100; font-size: 12pt !important;}';
 owCSS.innerHTML += '.originpost {padding-bottom:6em !important; }';
@@ -942,7 +943,7 @@ GM_config.init({
     {
         'quoteSize':
         {
-            'label': 'Quotes recursive time: ',
+            'label': 'Quotes recursive time(enable betterquote first): ',
             'type': 'int',
             'min': 1,
             'max': 999,
@@ -1030,16 +1031,19 @@ function dynamicparts() {
         /* useless for now */
         return false;
     }
-    var currentStyle, currentAdmin, currentCSS;
-    currentStyle = 'day';
-    currentAdmin = 0;
+    var currentCSS;
     currentCSS = document.createElement('style');
     currentCSS.type = 'text/css';
-    currentCSS.id = 'altcss';
-    currentCSS.innerHTML = GM_config.get('altCSS');
+    currentCSS.id = 'currentcss';
+    if(currentStyle === 'day') {
+        currentCSS.innerHTML = GM_config.get('altCSS');
+        parseframescss(frameDayCSS);
+    } else {
+        currentCSS.innerHTML = nightCSS;
+        parseframescss(frameNightCSS);
+    }
+    htmlHead.appendChild(currentCSS);  /* initialize alternative CSS */
 
-    /* initialize alternative CSS */
-    htmlHead.appendChild(currentCSS);
     function parseframescss(targetCSS) {
         var i, k;
         for (k = 0; k < window.top.frames.length; k++) {
@@ -1061,17 +1065,21 @@ function dynamicparts() {
             currentCSS.innerHTML = nightCSS;
             parseframescss(frameNightCSS);
             document.getElementById('cssswitcher') .innerHTML = 'CSS on';
-            currentStyle = 'night';
+            GM_setValue('gm_currentstyle', 'night');
         } else {
             currentCSS.innerHTML = GM_config.get('altCSS');
             parseframescss(frameDayCSS);
             document.getElementById('cssswitcher') .innerHTML = 'CSS off';
-            currentStyle = 'day';
+            GM_setValue('gm_currentstyle', 'day');
         }
     }
 
     /* init dynamic toolbar links */
-    classToolbar.innerHTML += '<span id="cssswitcher" >CSS off</span>';
+    if (currentStyle === 'day') {
+        classToolbar.innerHTML += '<span id="cssswitcher" >CSS off</span>';
+    } else {
+        classToolbar.innerHTML += '<span id="cssswitcher" >CSS on</span>';
+    }
     if (GM_config.get('wpOn')) {
         classToolbar.innerHTML += '<span id="writepadswitcher" >writepad</span>';
     }
@@ -1483,19 +1491,16 @@ function dynamicparts() {
         function styletheframe(targetObj) {
             /* insert css into iframe */
             var headFrame, iframeCSS, tdFirst, anchorInFrame;
-            if (!targetObj.document.getElementsByClassName('fivehundred') .length) {
-                /* handle 40x page */
+            if (!targetObj.document.getElementsByClassName('fivehundred') .length) {  /* handle 40x page */
                 headFrame = targetObj.document.getElementsByTagName('head')[0];
                 iframeCSS = document.createElement('style');
                 iframeCSS.type = 'text/css';
                 iframeCSS.id = 'framecss';
-                iframeCSS.innerHTML += 'html body tbody tr td font[color="#cc1105"],font[color="#117743"] {display: none;}';
-                iframeCSS.innerHTML += 'html body tbody tr td font[color="#789922"] {color: red;}';
-                iframeCSS.innerHTML += '.posttime {display: none;}';
-                iframeCSS.innerHTML += '.report {display: none;}';
-                iframeCSS.innerHTML += '.threadpost {margin: 0 0 0 0;}';
-                iframeCSS.innerHTML += 'img {width: 30%; height: 30%}';
-                iframeCSS.innerHTML += 'table {padding: 0; width: 18em;}';
+    		if(currentStyle === 'day') {
+        	    iframeCSS.innerHTML = frameDayCSS;
+    		} else {
+        	    iframeCSS.innerHTML = frameNightCSS;
+    		}
                 /* add condition on css switch */
                 headFrame.appendChild(iframeCSS);
                 tdFirst = targetObj.document.getElementsByTagName('td')[0];
