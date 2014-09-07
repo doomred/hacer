@@ -2,7 +2,7 @@
 // @name hacer-dev
 // @namespace https://github.com/doomred
 // @description Provide a better HTML architecture for add functions and CSS design. This script is by hacers for hacers.
-// @version 0.0.8
+// @version 0.0.8a
 // @encoding utf-8
 // @license ISC
 // @copyright hacer contributors
@@ -39,7 +39,8 @@
 var i = 0, k = 0;
 
 /* init variable Handler */
-var hacerVersion = '0.0.8';
+var hacerVersion = '0.0.8a';
+var currentStyle = GM_getValue('gm_currentstyle', 'day');
 
 
 var hboxCSS, nightCSS, frameNightCSS, frameDayCSS;
@@ -85,7 +86,6 @@ function alertNotice(alertContent, delay) {
 function giveup(x) {
     return x;
 }
-
 function forceupdate() {
     GM_openInTab('https://raw.github.com/doomred/hacer/devvel/beauty.user.js');
     giveup(0);
@@ -153,19 +153,12 @@ fbAnchor.id = 'hacerfeedback';
 fbAnchor.addEventListener('click', feedreportback, false);
 fbAnchor.style.textAlign = 'right';
 fbAnchor.innerHTML = 'feedback';
+
 GM_config.init({
     'id': 'GM_config',
     'title': 'hacer setting',
     'fields':
     {
-        'quoteSize':
-        {
-            'label': 'Quotes recursive time: ',
-            'type': 'int',
-            'min': 1,
-            'max': 999,
-            'default': '4'
-        },
         'twoupOn':
         {
             'label': 'Use 2-up style: ',
@@ -219,6 +212,14 @@ GM_config.init({
             'label': 'If enable betterquote',
             'type': 'checkbox',
             'default': true
+        },
+        'quoteSize':
+        {
+            'label': 'Quotes recursive time(enable betterquote first): ',
+            'type': 'int',
+            'min': 1,
+            'max': 999,
+            'default': '4'
         }
     },
     'events':
@@ -239,10 +240,6 @@ GM_config.init({
     /* 'frame': gmconfigDiv */
 });
 
-    classToolbar.innerHTML += '<span id="settingswitcher" >SETTING</span>';
-    document.getElementById('settingswitcher') .addEventListener('click', function () {
-        GM_config.open();
-    }, false);
 
 function dynamicparts() {
     /* init foobar varibles */
@@ -253,16 +250,19 @@ function dynamicparts() {
         /* useless for now */
         return false;
     }
-    var currentStyle, currentAdmin, currentCSS;
-    currentStyle = 'day';
-    currentAdmin = 0;
+    var currentCSS;
     currentCSS = document.createElement('style');
     currentCSS.type = 'text/css';
-    currentCSS.id = 'altcss';
-    currentCSS.innerHTML = GM_config.get('altCSS');
+    currentCSS.id = 'currentcss';
+    if(currentStyle === 'day') {
+        currentCSS.innerHTML = GM_config.get('altCSS');
+        parseframescss(frameDayCSS);
+    } else {
+        currentCSS.innerHTML = nightCSS;
+        parseframescss(frameNightCSS);
+    }
+    htmlHead.appendChild(currentCSS);  /* initialize alternative CSS */
 
-    /* initialize alternative CSS */
-    htmlHead.appendChild(currentCSS);
     function parseframescss(targetCSS) {
         var i, k;
         for (k = 0; k < window.top.frames.length; k++) {
@@ -284,17 +284,21 @@ function dynamicparts() {
             currentCSS.innerHTML = nightCSS;
             parseframescss(frameNightCSS);
             document.getElementById('cssswitcher') .innerHTML = 'CSS on';
-            currentStyle = 'night';
+            GM_setValue('gm_currentstyle', 'night');
         } else {
             currentCSS.innerHTML = GM_config.get('altCSS');
             parseframescss(frameDayCSS);
             document.getElementById('cssswitcher') .innerHTML = 'CSS off';
-            currentStyle = 'day';
+            GM_setValue('gm_currentstyle', 'day');
         }
     }
 
     /* init dynamic toolbar links */
-    classToolbar.innerHTML += '<span id="cssswitcher" >CSS off</span>';
+    if (currentStyle === 'day') {
+        classToolbar.innerHTML += '<span id="cssswitcher" >CSS off</span>';
+    } else {
+        classToolbar.innerHTML += '<span id="cssswitcher" >CSS on</span>';
+    }
     if (GM_config.get('wpOn')) {
         classToolbar.innerHTML += '<span id="writepadswitcher" >writepad</span>';
     }
@@ -712,13 +716,11 @@ function dynamicparts() {
                 iframeCSS = document.createElement('style');
                 iframeCSS.type = 'text/css';
                 iframeCSS.id = 'framecss';
-                iframeCSS.innerHTML += 'html body tbody tr td font[color="#cc1105"],font[color="#117743"] {display: none;}';
-                iframeCSS.innerHTML += 'html body tbody tr td font[color="#789922"] {color: red;}';
-                iframeCSS.innerHTML += '.posttime {display: none;}';
-                iframeCSS.innerHTML += '.report {display: none;}';
-                iframeCSS.innerHTML += '.threadpost {margin: 0 0 0 0;}';
-                iframeCSS.innerHTML += 'img {width: 30%; height: 30%}';
-                iframeCSS.innerHTML += 'table {padding: 0; width: 18em;}';
+    		if(currentStyle === 'day') {
+        	    iframeCSS.innerHTML = frameDayCSS;
+    		} else {
+        	    iframeCSS.innerHTML = frameNightCSS;
+    		}
                 /* add condition on css switch */
                 headFrame.appendChild(iframeCSS);
                 tdFirst = targetObj.document.getElementsByTagName('td')[0];
