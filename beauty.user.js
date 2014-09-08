@@ -970,7 +970,7 @@ GM_config.init({
         {
             'label': 'If enable writepad: ',
             'type': 'checkbox',
-            'default': true
+            'default': false
         },
         'adminOn':
         {
@@ -1009,7 +1009,6 @@ GM_config.init({
             dynamicparts();
         },
         'open': function () {
-            /* document.getElementById('GM_config').style = ''; */
         },
         'save': function () {
             alertNotice('Reload to active!', 1000);
