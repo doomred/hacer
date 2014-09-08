@@ -2,7 +2,7 @@
 // @name hacer-dev
 // @namespace https://github.com/doomred
 // @description Provide a better HTML architecture for add functions and CSS design. This script is by hacers for hacers.
-// @version 0.0.8a
+// @version 0.0.8b
 // @encoding utf-8
 // @license ISC
 // @copyright hacer contributors
