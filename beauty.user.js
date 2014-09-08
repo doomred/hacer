@@ -9,8 +9,8 @@
 // @author dye `Eric' jarhoo
 // @homepageURL http://saltyremix.com
 // @icon https://raw.github.com/doomred/hacer/master/hacer_icon.png
-// @updateURL https://raw.github.com/doomred/hacer/devvel/hacer.meta.js
-// @resource mburl https://raw.github.com/doomred/hacer/devvel/hacer.meta.js
+// @updateURL https://raw.github.com/doomred/hacer/master/hacer.meta.js
+// @resource mburl https://raw.github.com/doomred/hacer/master/hacer.meta.js
 // @include http://h.acfun.tv/*
 // @exclude http://h.acfun.tv/homepage/ref*
 // @run-at document-end
@@ -870,14 +870,14 @@ function giveup(x) {
 }
 
 function forceupdate() {
-    GM_openInTab('https://raw.github.com/doomred/hacer/devvel/beauty.user.js');
+    GM_openInTab('https://raw.github.com/doomred/hacer/master/beauty.user.js');
     giveup(0);
 }
 function checkupdate() {
     var updateMB = GM_getResourceText('mburl');
     if (updateMB.search(hacerVersion) === -1) {
         alertNotice('New version Found, please wait awhile to install.', 3000);
-        GM_openInTab('https://raw.github.com/doomred/hacer/devvel/beauty.user.js');
+        GM_openInTab('https://raw.github.com/doomred/hacer/master/beauty.user.js');
         giveup(0);
     } else {
         alertNotice('`hacer\' is up-to-date', 1500);
@@ -1070,6 +1070,7 @@ function dynamicparts() {
             document.getElementById('cssswitcher') .innerHTML = 'CSS off';
             GM_setValue('gm_currentstyle', 'day');
         }
+        currentStyle = GM_getValue('gm_currentstyle');
     }
 
     /* init dynamic toolbar links */
@@ -1156,6 +1157,7 @@ function dynamicparts() {
             idMenu.addEventListener('DOMMouseScroll', scrollmenu, false);
             idMenu.style.left = '0px';
             idMenu.style.opacity = 1;
+            idMenu.style.zIndex = 9999;
         };
         idMenu.onmouseout = function () {
             window.removeEventListener('DOMMouseScroll', disablescroll, false);
