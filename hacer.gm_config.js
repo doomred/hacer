@@ -1,9 +1,9 @@
 /*****************************
- * Origin License: LGPL
+ * This is a derivative work of GM_config,
  * Origin Copyright info: Copyright 2009-2013, GM_config Contributors
  * GM_config Contributors: Mike Medley <medleymind@gmail.com>, Joe Simmons, Izzy Soft, Marti Martz
  *
- * LICENSE: LGPL
+ * LICENSE under LGPLv3
  * LICENSE NOTICE:
  *  GM_config is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published by
@@ -17,6 +17,7 @@
  *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  *
  * Discreption: Customize for hacer, just work & easy to use.
  * Edit & Optimize By:
