@@ -140,10 +140,10 @@ classToolbar.appendChild(gmconfigDiv);
 
 function feedreportback() {
     var strWindowFeatures = 'left=50, top=50 location, resizable, scrollbars, status';
-    if (window.confirm('YES for github, NO for acfun')) {
+    if (window.confirm('YES for github, NO for hacfun')) {
         window.open('https://github.com/doomred/hacer/issues', 'FEED_ME_BUGS', strWindowFeatures);
     } else {
-        window.open('http://acfun.tv', 'Report & Suggestion', strWindowFeatures);
+        window.open('http://h.acfun.tv/t/4288535', 'Report & Suggestion', strWindowFeatures);
     }
 }
 
