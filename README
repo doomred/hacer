@@ -2,21 +2,24 @@ hacer is:
 Providing an extensible custom layout for h.acfun.tv using javascript(with inline CSS).
 
 About the files(sequence by files suffix):
-beauty.user.js		-functional main js file, the non-minimized one
+beauty.user.js		-functional main js file
 hacer.meta.js		-metablock of beauty.user.js, need get update every version release
-hacer.gm_config.js	-modified library for hacer. _licensed under LGPL_
 frameday.css		-default betterquote CSS @iframes
 framenight.css		-betterquote CSS under night vision
 hbox.css		-all around styles for hbox(the customed image popup viewer)
 night.css		-night vision of hacer
-LICENSE			-for all files exclude `hacer.gm_config.js' library, is ISC
+LICENSE-ISC		-hacer is licensed under ISC
 README			-this file
-tools			-some howto texts & necessary related tools
+tools/*			-some howto texts & necessary related tools
+gm_config/		-contain a derivative work from GMconfig, all files within _licensed under LGPLv3_
+gm_config/easycfg.js	-as the filename says, aim to be easycfg then use.
+gm_config/COPYING	-LGPLv3 license
+
 
 FAQ:
 How is the developing method?
 0) Install hacer(the non-dev version) if you don't have one.
-1) Copy content of branch devvel(means hitting hard something & someone)
+1) Copy content of branch devvel(means hitting hard something/someone)
 2) Bum what you like to hack. Notice that all (necessary) files in devvel branch is linking with each other.
 
 How is the developing versioning?

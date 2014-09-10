@@ -2,7 +2,7 @@
 // @name hacer-dev
 // @namespace https://github.com/doomred
 // @description Provide a better HTML architecture for add functions and CSS design. This script is by hacers for hacers.
-// @version 0.0.9i
+// @version 0.0.9ii
 // @encoding utf-8
 // @license ISC
 // @copyright hacer contributors
@@ -18,7 +18,7 @@
 // @grant GM_registerMenuCommand
 // @grant GM_getValue
 // @grant GM_setValue
-// @require https://raw.github.com/doomred/hacer/devvel/hacer.gm_config.js
+// @require https://raw.github.com/doomred/hacer/devvel/gm_config/easycfg.js
 // @resource mburl https://raw.github.com/doomred/hacer/devvel/hacer.meta.js
 // @resource hboxcss https://raw.github.com/doomred/hacer/devvel/hbox.css
 // @resource framenightcss https://raw.github.com/doomred/hacer/devvel/framenight.css
@@ -39,7 +39,7 @@
 var i = 0, k = 0;
 
 /* init variable Handler */
-var hacerVersion = '0.0.9i';
+var hacerVersion = '0.0.9ii';
 var currentStyle = GM_getValue('gm_currentstyle', 'day');
 
 
@@ -224,6 +224,7 @@ GM_config.init({
     'events':
     {
         'init': function () {
+            GM_config.open();
             dynamicparts();
         },
         'open': function () {
@@ -235,8 +236,8 @@ GM_config.init({
         'close': function () {
         }
     },
-    'css': '#GM_config {position: static !important; width: 99% !important; margin: 1.5em auto !important; border: 0 !important;;}'
-    /* 'frame': gmconfigDiv */
+    'css': '#GM_config {position: static !important; width: 99% !important; margin: 1.5em auto !important; border: 0 !important;;}',
+    'frame': gmconfigDiv
 });
 
 
