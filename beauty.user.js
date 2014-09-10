@@ -18,7 +18,7 @@
 // @grant GM_registerMenuCommand
 // @grant GM_getValue
 // @grant GM_setValue
-// @require https://raw.github.com/doomred/hacer/devvel/hacer.gm_config.js
+// @require https://raw.github.com/doomred/hacer/devvel/gm_config/easycfg.js
 // @resource mburl https://raw.github.com/doomred/hacer/master/hacer.meta.js
 // ==/UserScript==
 
