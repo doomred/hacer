@@ -2,7 +2,7 @@
 // @name hacer
 // @namespace https://github.com/doomred
 // @description Provide a better HTML architecture for add functions and CSS design. This script is by hacers for hacers.
-// @version 0.0.9
+// @version 0.0.10
 // @encoding utf-8
 // @license ISC
 // @copyright hacer contributors
@@ -18,6 +18,6 @@
 // @grant GM_registerMenuCommand
 // @grant GM_getValue
 // @grant GM_setValue
-// @require https://raw.github.com/doomred/hacer/devvel/hacer.gm_config.js
+// @require https://raw.github.com/doomred/hacer/devvel/gm_config/easycfg.js
 // @resource mburl https://raw.github.com/doomred/hacer/master/hacer.meta.js
 // ==/UserScript==

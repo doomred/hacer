@@ -2,7 +2,7 @@
 // @name hacer
 // @namespace https://github.com/doomred
 // @description Provide a better HTML architecture for add functions and CSS design. This script is by hacers for hacers.
-// @version 0.0.9
+// @version 0.0.10
 // @encoding utf-8
 // @license ISC
 // @copyright hacer contributors
@@ -35,7 +35,7 @@
 var i = 0, k = 0;
 
 /* init variable Handler */
-var hacerVersion = '0.0.9';
+var hacerVersion = '0.0.10';
 var currentStyle = GM_getValue('gm_currentstyle', 'day');
 
 
@@ -131,6 +131,7 @@ for (i = 0; i < classToolbar.length; i++) {
 var classToolbar = document.getElementsByClassName('toolbar-bottom')[0];
 var gmconfigDiv = document.createElement('div');  /* plan to contain setting panel */
 gmconfigDiv.id = 'gm-config';
+gmconfigDiv.style.transition = 'height 5s ease-in-out';
 classToolbar.appendChild(gmconfigDiv);
 
 function feedreportback() {
@@ -138,7 +139,7 @@ function feedreportback() {
     if (window.confirm('YES for github, NO for acfun')) {
         window.open('https://github.com/doomred/hacer/issues', 'FEED_ME_BUGS', strWindowFeatures);
     } else {
-        window.open('http://acfun.tv', 'Report & Suggestion', strWindowFeatures);
+        window.open('http://h.acfun.tv/t/4288535', 'Report & Suggestion', strWindowFeatures);
     }
 }
 
@@ -223,7 +224,10 @@ GM_config.init({
             dynamicparts();
         },
         'open': function () {
-            /* document.getElementById('GM_config').style = ''; */
+
+            window.setTimeout(function() {
+                document.getElementById('GM_config').style.height = '400px';
+            }, 100);  //100 MAGIC
         },
         'save': function () {
             alertNotice('Reload to active!', 1000);
@@ -231,9 +235,11 @@ GM_config.init({
         'close': function () {
         }
     },
-    'css': '#GM_config {position: static !important; width: 99% !important; margin: 1.5em auto !important; border: 0 !important;;}'
-    /* 'frame': gmconfigDiv */
+    'css': '#GM_config {position: static !important; width: 99% !important; margin: 1.5em auto !important;'
+    + 'background: rgba(0,0,0,0); border: 0 !important; transition: height 1s ease-in-out !important;}',
+    'frame': gmconfigDiv
 });
+
 
 
 function dynamicparts() {
@@ -288,20 +294,35 @@ function dynamicparts() {
         currentStyle = GM_getValue('gm_currentstyle');
     }
 
-    /* init dynamic toolbar links */
+    /* init dynamic toolbar links, innerHTML@classToolbar will break GM_config */
+    idCSSSwitcher = document.createElement('span');
+    idCSSSwitcher.id = 'cssswitcher';
+    classToolbar.appendChild(idCSSSwitcher);
     if (currentStyle === 'day') {
-        classToolbar.innerHTML += '<span id="cssswitcher" >CSS off</span>';
+        idCSSSwitcher.innerHTML += 'CSS off';
     } else {
-        classToolbar.innerHTML += '<span id="cssswitcher" >CSS on</span>';
+        idCSSSwitcher.innerHTML += 'CSS on';
     }
     if (GM_config.get('wpOn')) {
-        classToolbar.innerHTML += '<span id="writepadswitcher" >writepad</span>';
+        idWpSwitcher = document.createElement('span');
+        idWpSwitcher.id = 'writepadswitcher';
+        idWpSwitcher.innerHTML += 'writepad';
+        classToolbar.appendChild(idWpSwitcher);
     }
-    classToolbar.innerHTML += '<span id="settingswitcher" >SETTING</span>';
+    idSetSwitcher = document.createElement('span');
+    idSetSwitcher.id = 'settingswitcher';
+    idSetSwitcher.innerHTML += 'SETTING';
+    classToolbar.appendChild(idSetSwitcher);
     classToolbar.appendChild(fbAnchor);
-    document.getElementById('cssswitcher') .addEventListener('click', cssSwitchHandler, false);
-    document.getElementById('settingswitcher') .addEventListener('click', function () {
-        GM_config.open();
+    idCSSSwitcher.addEventListener('click', cssSwitchHandler, false);
+    idSetSwitcher.addEventListener('click', function () {
+        if(!GM_config.fields['quoteSize'].toValue()) {  //dirty hack, to find out panel status
+            GM_config.open();
+            idSetSwitcher.innerHTML = '[SAVE]';
+        } else {
+            GM_config.save();
+            idSetSwitcher.innerHTML = 'SETTING';
+        }
     }, false);
 
     /*  add class threadfly */
