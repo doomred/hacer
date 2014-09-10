@@ -65,7 +65,7 @@ function GM_configInit(config, args) {
         "#GM_config .block { display: block; }",
         "#GM_config .saveclose_buttons { margin: 16px 10px 10px; padding: 2px 12px; }",
         "#GM_config .reset, #GM_config .reset a," +
-          " #GM_config_buttons_holder { color: #000; text-align: right; }",
+        "#GM_config_buttons_holder { color: #000; text-align: right; }",
         "#GM_config .config_header { font-size: 20pt; margin: 0; }",
         "#GM_config .config_desc, #GM_config .section_desc, #GM_config .reset { font-size: 9pt; }",
         "#GM_config .center { text-align: center; }",
@@ -268,29 +268,19 @@ GM_configStruct.prototype = {
       )));
 
       body.appendChild(bodyWrapper); // Paint everything to window at once
-      config.center(); // Show and center iframe
-      window.addEventListener('resize', config.center, false); // Center frame on resize
 
       // Call the open() callback function
       config.onOpen(config.frame.contentDocument || config.frame.ownerDocument,
                     config.frame.contentWindow || window,
                     config.frame);
 
-      // Close frame on window close
-      window.addEventListener('beforeunload', function () {
-          config.close();
-      }, false);
-
       // Now that everything is loaded, make it visible
       config.frame.style.display = "block";
       config.isOpen = true;
     }
 
-    // Change this in the onOpen callback using this.frame.setAttribute('style', '')
-    var defaultStyle = 'bottom: auto; border: 1px solid #000; display: none; height: 75%;'
-      + ' left: 0; margin: 0; max-height: 95%; max-width: 95%; opacity: 0;'
-      + ' overflow: auto; padding: 0; position: fixed; right: auto; top: 0;'
-      + ' width: 75%; z-index: 999;';
+    // remove useless&init for sliding setting panel
+    var defaultStyle = 'height: 0; z-index: 999;';
 
     // Either use the element passed to init() or create an iframe
     if (this.frame) {
@@ -423,21 +413,6 @@ GM_configStruct.prototype = {
     return A;
   },
 
-  center: function () {
-    var node = this.frame;
-    if (!node) return;
-    var style = node.style,
-        beforeOpacity = style.opacity;
-    if (style.display == 'none') style.opacity = '0';
-    style.display = '';
-    style.top = Math.floor((window.innerHeight / 2) - (node.offsetHeight / 2)) + 'px';
-    style.left = Math.floor((window.innerWidth / 2) - (node.offsetWidth / 2)) + 'px';
-    style.opacity = '1';
-  },
-
-  remove: function (el) {
-    if (el && el.parentNode) el.parentNode.removeChild(el);
-  }
 };
 
 // Define a bunch of API stuff
